@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/bazario
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # Use "update" for development, "validate" for production
+    show-sql: true # Optional: Shows generated SQL in the console
+    database-platform: org.hibernate.dialect.MySQL8Dialect # Use MySQL8Dialect for MySQL 8+
+    properties:
+       hibernate:
+          format_sql:true
+  application:
+    name: New_bazario
