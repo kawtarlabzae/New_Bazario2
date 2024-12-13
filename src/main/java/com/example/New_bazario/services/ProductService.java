@@ -1,6 +1,7 @@
 package com.example.New_bazario.services;
 
 import com.example.New_bazario.entities.Product;
+import com.example.New_bazario.entities.ProductFactory;
 import com.example.New_bazario.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product addProduct(Integer categoryId, Product product) {
-        product.setCategoryId(categoryId);
+    public Product addProduct(String name, String description, BigDecimal price, Integer stockQuantity, Integer categoryId, String imageUrl) {
+        Product product = ProductFactory.createProduct(name, description, price, stockQuantity, categoryId, imageUrl);
         return productRepository.save(product);
     }
+
 
     public Product getProductById(Integer id) {
         return productRepository.findById(id)

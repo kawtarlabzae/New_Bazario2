@@ -35,6 +35,7 @@ public class OrderService {
     }
 
     public List<Order> getOrdersByUserId(Integer userId) {
-        return orderRepository.findByUser_Id(userId);
+
+        return orderRepository.findOrdersWithCartsByUserId(userId);
     }
 }

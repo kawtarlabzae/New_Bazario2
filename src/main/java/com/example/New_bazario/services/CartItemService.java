@@ -33,6 +33,6 @@ public class CartItemService {
     }
 
     public List<CartItem> getCartItemsByCartId(Integer cartId) {
-        return cartItemRepository.findByCart_CartId(cartId);
+        return cartItemRepository.findCartItemsWithProductsByCartId(cartId);
     }
 }

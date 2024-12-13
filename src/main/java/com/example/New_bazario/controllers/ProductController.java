@@ -19,9 +19,14 @@ public class ProductController {
 
     @PostMapping
     public Product addProduct(
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam BigDecimal price,
+            @RequestParam Integer stockQuantity,
             @RequestParam Integer categoryId,
-            @RequestBody Product product) {
-        return productService.addProduct(categoryId, product);
+            @RequestParam String imageUrl
+    ) {
+        return productService.addProduct(name, description, price, stockQuantity, categoryId, imageUrl);
     }
 
     @GetMapping("/{id}")
@@ -37,6 +42,9 @@ public class ProductController {
             @RequestParam(required = false) Integer minStock,
             @RequestParam(required = false) String name
     ) {
+        if(minStock==null){
+            minStock=1;
+        }
         return productService.advancedFilterProducts(categoryIds, minPrice, maxPrice, minStock, name);
     }
 
