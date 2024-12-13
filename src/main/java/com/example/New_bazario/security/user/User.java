@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,7 +36,13 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
+    private Activity activity;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     // Constructor
     private User(Builder builder) {
         this.id = builder.id;
@@ -44,6 +51,10 @@ public class User implements UserDetails {
         this.email = builder.email;
         this.password = builder.password;
         this.role = builder.role;
+        this.phoneNumber = builder.phoneNumber;
+        this.activity = builder.activity;
+        this.createdAt = builder.createdAt;
+        this.updatedAt = builder.updatedAt;
     }
 
     // Builder Pattern
@@ -54,6 +65,10 @@ public class User implements UserDetails {
         private String email;
         private String password;
         private Role role;
+        private String phoneNumber;
+        private Activity activity;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
 
         public Builder id(Integer id) {
             this.id = id;
@@ -82,6 +97,26 @@ public class User implements UserDetails {
 
         public Builder role(Role role) {
             this.role = role;
+            return this;
+        }
+
+        public Builder phoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public Builder activity(Activity activity) {
+            this.activity = activity;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
             return this;
         }
 
@@ -174,4 +209,28 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 }

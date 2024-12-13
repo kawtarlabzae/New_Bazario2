@@ -1,5 +1,10 @@
 package com.example.New_bazario.security.auth;
 
+import java.time.LocalDateTime;
+
+import com.example.New_bazario.security.user.Activity;
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,4 +44,11 @@ public class RegisterRequest {
 	}
 	private String email;
 	private String password;
+	private String phoneNumber;
+
+ 
+    private Activity activity;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
