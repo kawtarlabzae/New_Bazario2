@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/api/v1/auth")
-
 public class AuthenticationController {
 
     public AuthenticationController(AuthenticationService service) {

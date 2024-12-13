@@ -13,29 +13,20 @@ public class Product {
     private Integer productId;
 
     private String name;
-
     private String description;
-
     private BigDecimal price;
-
     private Integer stockQuantity;
-
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
-
     private String imageUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @Column(name = "category_id", nullable = false)
+    private Integer categoryId;
 
     // Constructors
     public Product() {}
 
-    public Product(Integer productId, String name, String description, BigDecimal price, Integer stockQuantity,
-                   LocalDateTime createdAt, LocalDateTime updatedAt, String imageUrl, Category category) {
-        this.productId = productId;
+    public Product(String name, String description, BigDecimal price, Integer stockQuantity, LocalDateTime createdAt, LocalDateTime updatedAt, String imageUrl, Integer categoryId) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -43,7 +34,7 @@ public class Product {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.imageUrl = imageUrl;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     // Getters and Setters
@@ -111,11 +102,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Category getCategory() {
-        return category;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 }

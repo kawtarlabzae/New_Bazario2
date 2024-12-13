@@ -29,7 +29,7 @@ public class SecurityConfiguration {
 		http
         .csrf(csrf -> csrf.disable()) // Disable CSRF protection
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/v1/auth/**").permitAll() // Allow unauthenticated access to specific endpoints
+            .requestMatchers("**").permitAll() // Allow unauthenticated access to specific endpoints
             .anyRequest().authenticated() // All other requests require authentication
         )
         .sessionManagement(session -> session

@@ -1,7 +1,6 @@
 package com.example.New_bazario.entities;
 
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "_category")
@@ -12,11 +11,7 @@ public class Category {
     private Integer id;
 
     private String name;
-
     private String description;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Product> products;
 
     // Constructors
     public Category() {}
@@ -49,13 +44,5 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
     }
 }

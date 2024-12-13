@@ -1,8 +1,6 @@
 package com.example.New_bazario.services;
 
-import com.example.New_bazario.entities.Category;
 import com.example.New_bazario.entities.Product;
-import com.example.New_bazario.repositories.CategoryRepository;
 import com.example.New_bazario.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,37 +10,25 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
     }
 
-    // Add a new product and assign it to a category
     public Product addProduct(Integer categoryId, Product product) {
-        // Fetch category by ID
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + categoryId));
-        
-        // Assign category to the product
-        product.setCategory(category);
-
+        product.setCategoryId(categoryId);
         return productRepository.save(product);
     }
 
-    // Get a product by ID
     public Product getProductById(Integer id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
     }
 
-    // Get all products
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    // Update a product and its category
     public Product updateProduct(Integer productId, Product updatedProduct, Integer categoryId) {
         Product product = getProductById(productId);
 
@@ -54,16 +40,17 @@ public class ProductService {
         product.setImageUrl(updatedProduct.getImageUrl());
         product.setUpdatedAt(updatedProduct.getUpdatedAt());
 
-        // Update category
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + categoryId));
-        product.setCategory(category);
+        // Update category ID
+        product.setCategoryId(categoryId);
 
         return productRepository.save(product);
     }
 
-    // Delete a product by ID
     public void deleteProduct(Integer id) {
         productRepository.deleteById(id);
+    }
+
+    public List<Product> getProductsByCategories(List<Integer> categoryIds) {
+        return productRepository.findProductsByCategoryIds(categoryIds);
     }
 }

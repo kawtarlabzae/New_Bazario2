@@ -16,7 +16,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Create a new product and assign it to a category
     @PostMapping
     public Product addProduct(
             @RequestParam Integer categoryId,
@@ -24,19 +23,16 @@ public class ProductController {
         return productService.addProduct(categoryId, product);
     }
 
-    // Get a product by ID
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Integer id) {
         return productService.getProductById(id);
     }
 
-    // Get all products
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    // Update a product and its category
     @PutMapping("/{id}")
     public Product updateProduct(
             @PathVariable Integer id,
@@ -45,9 +41,13 @@ public class ProductController {
         return productService.updateProduct(id, updatedProduct, categoryId);
     }
 
-    // Delete a product
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Integer id) {
         productService.deleteProduct(id);
+    }
+
+    @GetMapping("/filter")
+    public List<Product> filterProductsByCategories(@RequestParam List<Integer> categoryIds) {
+        return productService.getProductsByCategories(categoryIds);
     }
 }
