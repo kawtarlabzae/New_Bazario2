@@ -4,7 +4,9 @@ import com.example.New_bazario.entities.Product;
 import com.example.New_bazario.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -52,5 +54,22 @@ public class ProductService {
 
     public List<Product> getProductsByCategories(List<Integer> categoryIds) {
         return productRepository.findProductsByCategoryIds(categoryIds);
+    }
+    public List<Product> advancedFilterProducts(
+            List<Integer> categoryIds,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            Integer minStock,
+            String name
+    ) {
+        List<Product> products = productRepository.findAll();
+
+        return products.stream()
+                .filter(product -> (categoryIds == null || categoryIds.contains(product.getCategoryId())))
+                .filter(product -> (minPrice == null || product.getPrice().compareTo(minPrice) >= 0))
+                .filter(product -> (maxPrice == null || product.getPrice().compareTo(maxPrice) <= 0))
+                .filter(product -> (minStock == null || product.getStockQuantity() >= minStock))
+                .filter(product -> (name == null || product.getName().toLowerCase().contains(name.toLowerCase())))
+                .collect(Collectors.toList());
     }
 }

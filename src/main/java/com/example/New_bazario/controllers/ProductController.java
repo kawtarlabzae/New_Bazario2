@@ -2,10 +2,11 @@ package com.example.New_bazario.controllers;
 
 import com.example.New_bazario.entities.Product;
 import com.example.New_bazario.services.ProductService;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -29,8 +30,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<Product> getFilteredProducts(
+            @RequestParam(required = false) List<Integer> categoryIds,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Integer minStock,
+            @RequestParam(required = false) String name
+    ) {
+        return productService.advancedFilterProducts(categoryIds, minPrice, maxPrice, minStock, name);
     }
 
     @PutMapping("/{id}")
@@ -44,10 +51,5 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Integer id) {
         productService.deleteProduct(id);
-    }
-
-    @GetMapping("/filter")
-    public List<Product> filterProductsByCategories(@RequestParam List<Integer> categoryIds) {
-        return productService.getProductsByCategories(categoryIds);
     }
 }
