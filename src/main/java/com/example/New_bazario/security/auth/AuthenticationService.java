@@ -1,5 +1,7 @@
 package com.example.New_bazario.security.auth;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -28,6 +30,9 @@ public class AuthenticationService {
 				.email(request.getEmail())
 				.password(passwordEncoder.encode(request.getPassword()))
 				.role(Role.USER)
+				.activity(request.getActivity())
+				.phoneNumber(request.getPhoneNumber())
+				.createdAt(LocalDateTime.now()) 
 				.build();
 		repository.save(user);
 		var jwtToken=jwtService.generateToken(user);
@@ -35,14 +40,7 @@ public class AuthenticationService {
 	}
 	
 	
-	public AuthenticationService(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService,
-			AuthenticationManager authenticationManager) {
-		super();
-		this.repository = repository;
-		this.passwordEncoder = passwordEncoder;
-		this.jwtService = jwtService;
-		this.authenticationManager = authenticationManager;
-	}
+	
 
 
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {

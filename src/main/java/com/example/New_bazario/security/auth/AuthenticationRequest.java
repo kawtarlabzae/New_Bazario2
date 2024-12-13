@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationRequest {
-	public AuthenticationRequest(String email, String password) {
-		super();
-		this.email = email;
-		this.password = password;
-	}
+	
 	private String email;
 	String password;
 	public String getEmail() {
@@ -28,21 +24,5 @@ public class AuthenticationRequest {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public static class Builder {
-        private String token;
-
-        public Builder token(String token) {
-            this.token = token;
-            return this;
-        }
-
-        public AuthenticationResponse build() {
-            return new AuthenticationResponse(this.token);
-        }
-    }
-
-    // Static method to access the builder
-    public static Builder builder() {
-        return new Builder();
-    }
+	
 }
