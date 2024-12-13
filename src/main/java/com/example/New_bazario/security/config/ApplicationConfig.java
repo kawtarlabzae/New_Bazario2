@@ -17,7 +17,7 @@ import com.example.New_bazario.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@RequiredArgsConstructor
+
 public class ApplicationConfig {
 	private final UserRepository repository;
 	
@@ -32,6 +32,10 @@ public class ApplicationConfig {
 		};
 		
 		
+	}
+	public ApplicationConfig(UserRepository repository) {
+		super();
+		this.repository = repository;
 	}
 	@Bean 
 	public AuthenticationProvider authenticationProvider() {

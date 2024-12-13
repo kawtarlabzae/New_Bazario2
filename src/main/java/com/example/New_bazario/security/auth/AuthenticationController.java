@@ -6,16 +6,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import com.example.New_bazario.security.auth.AuthenticationResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
+
 public class AuthenticationController {
 
-    private final AuthenticationService service;
+    public AuthenticationController(AuthenticationService service) {
+		super();
+		this.service = service;
+	}
+
+	private final AuthenticationService service;
 
     @GetMapping("/register")
     public String showRegisterPage() {

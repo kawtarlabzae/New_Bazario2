@@ -13,8 +13,13 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+
 public class SecurityConfiguration {
+	public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
+		super();
+		this.jwtAuthFilter = jwtAuthFilter;
+		this.authenticationProvider = authenticationProvider;
+	}
 	private final JwtAuthenticationFilter jwtAuthFilter; 
 	
 	private final AuthenticationProvider authenticationProvider;

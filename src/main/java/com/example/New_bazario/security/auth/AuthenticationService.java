@@ -16,12 +16,11 @@ import com.example.New_bazario.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class AuthenticationService {
-	private final UserRepository repository;
-	private final PasswordEncoder passwordEncoder;
-	private final JwtService jwtService;
-	private final AuthenticationManager authenticationManager;
+	private final UserRepository repository = null;
+	private final PasswordEncoder passwordEncoder = null;
+	private final JwtService jwtService = null;
+	private final AuthenticationManager authenticationManager = null;
 	
 	public AuthenticationResponse register(RegisterRequest request) {
 		var user= User.builder()

@@ -47,8 +47,33 @@ public class RegisterRequest {
 	private String phoneNumber;
 
  
-    private Activity activity;
+    public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public Activity getActivity() {
+		return activity;
+	}
+	public void setActivity(Activity activity) {
+		this.activity = activity;
+	}
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	private Activity activity;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+	
 }
