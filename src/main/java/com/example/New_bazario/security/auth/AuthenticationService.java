@@ -17,11 +17,18 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 public class AuthenticationService {
-	private final UserRepository repository = null;
-	private final PasswordEncoder passwordEncoder = null;
-	private final JwtService jwtService = null;
-	private final AuthenticationManager authenticationManager = null;
-	
+	private final UserRepository repository ;
+	private final PasswordEncoder passwordEncoder ;
+	private final JwtService jwtService ;
+	private final AuthenticationManager authenticationManager ;
+
+	public AuthenticationService(AuthenticationManager authenticationManager, UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+		this.authenticationManager = authenticationManager;
+		this.repository = repository;
+		this.passwordEncoder = passwordEncoder;
+		this.jwtService = jwtService;
+	}
+
 	public AuthenticationResponse register(RegisterRequest request) {
 		var user= User.builder()
 				.firstname(request.getFirstname())
