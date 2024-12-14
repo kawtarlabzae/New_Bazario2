@@ -8,55 +8,64 @@
     <link href="/css/header.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50">
     <!-- Include the header -->
     <div th:replace="~{header :: header}"></div>
-    <div th:replace="~{search :: search}"></div>
-
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-6">Products</h1>
-
-        <!-- No results message -->
-        <div th:if="${#lists.isEmpty(products)}" class="text-gray-500 mt-6">
-            No products found.
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <div th:replace="~{search :: search}"></div>
         </div>
 
-        <!-- Product Grid -->
-        <div th:if="${not #lists.isEmpty(products)}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-            <!-- Loop through products -->
-            <div th:each="product : ${products}" class="bg-white border rounded-lg shadow-md overflow-hidden">
-                <!-- Product Image -->
-                <div class="w-full h-48 overflow-hidden">
-                    <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
-                         th:src="${product.imageUrl}"
-                         alt="Product Image"
-                         class="w-full h-full object-cover">
-                    <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
-                         src="/default-product-image.jpg"
-                         alt="Default Image"
-                         class="w-full h-full object-cover">
-                </div>
+        <!-- Main Content -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <h1 class="text-2xl font-bold text-gray-900 mb-8">Products</h1>
 
-                <!-- Product Info -->
-                <div class="p-4">
-                    <!-- Product Name -->
-                    <h3 class="text-lg font-bold text-gray-800" th:text="${product.name}"></h3>
+            <!-- No results message -->
+            <div th:if="${#lists.isEmpty(products)}" class="text-gray-500 text-center py-8">
+                No products found.
+            </div>
 
-                    <!-- Product Description -->
-                    <p class="text-sm text-gray-500 mt-2" th:text="${product.description}"></p>
+            <!-- Product Grid -->
+            <div th:if="${not #lists.isEmpty(products)}" 
+                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Loop through products -->
+                <div th:each="product : ${products}" 
+                     class="bg-white border rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+                    <!-- Product Image -->
+                    <div class="w-full h-48 overflow-hidden">
+                        <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
+                             th:src="${product.imageUrl}"
+                             alt="Product Image"
+                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                        <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
+                             src="/default-product-image.jpg"
+                             alt="Default Image"
+                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                    </div>
 
-                    <!-- Price -->
-                    <p class="text-lg font-semibold text-indigo-600 mt-2" th:text="'$' + ${product.price}"></p>
+                    <!-- Product Info -->
+                    <div class="p-5">
+                        <!-- Product Name -->
+                        <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600 transition-colors duration-200" 
+                            th:text="${product.name}"></h3>
 
-                    <!-- Stock -->
-                    <p class="text-sm mt-2">
-                        <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}"
-                              class="text-green-600 font-medium"
-                              th:text="'In Stock: ' + ${product.stockQuantity}"></span>
-                        <span th:unless="${product.stockQuantity != null and product.stockQuantity > 0}"
-                              class="text-red-600 font-medium">Out of Stock</span>
-                    </p>
+                        <!-- Product Description -->
+                        <p class="text-sm text-gray-600 mt-2" th:text="${product.description}"></p>
+
+                        <!-- Price -->
+                        <p class="text-lg font-bold text-indigo-600 mt-3" th:text="'$' + ${product.price}"></p>
+
+                        <!-- Stock -->
+                        <p class="text-sm mt-2">
+                            <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}"
+                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                                  th:text="'In Stock: ' + ${product.stockQuantity}"></span>
+                            <span th:unless="${product.stockQuantity != null and product.stockQuantity > 0}"
+                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                  Out of Stock
+                            </span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
