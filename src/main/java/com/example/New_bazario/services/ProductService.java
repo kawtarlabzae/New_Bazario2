@@ -34,9 +34,8 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product updateProduct(Integer productId, Product updatedProduct, Integer categoryId) {
+    public Product updateProduct(Integer productId, Product updatedProduct) {
         Product product = getProductById(productId);
-
         // Update product details
         product.setName(updatedProduct.getName());
         product.setDescription(updatedProduct.getDescription());
@@ -44,15 +43,16 @@ public class ProductService {
         product.setStockQuantity(updatedProduct.getStockQuantity());
         product.setImageUrl(updatedProduct.getImageUrl());
         product.setUpdatedAt(updatedProduct.getUpdatedAt());
-
-        // Update category ID
-        product.setCategoryId(categoryId);
+        product.setCategoryId(updatedProduct.getCategoryId());
 
         return productRepository.save(product);
     }
 
-    public void deleteProduct(Integer id) {
-        productRepository.deleteById(id);
+    public void deleteProduct(Integer productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new RuntimeException("Product not found with ID: " + productId);
+        }
+        productRepository.deleteById(productId);
     }
 
     public List<Product> getProductsByCategories(List<Integer> categoryIds) {
