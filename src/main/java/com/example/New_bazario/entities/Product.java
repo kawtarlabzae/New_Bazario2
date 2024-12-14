@@ -18,6 +18,7 @@ public class Product {
     private Integer stockQuantity;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @Column(length = 600)
     private String imageUrl;
 
     @Column(name = "category_id", nullable = false)

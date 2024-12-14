@@ -31,7 +31,7 @@ public class ProductViewController {
 
     @GetMapping
     public String listProducts(
-            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) List<Integer> categoryIds, // Accept multiple category IDs
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
@@ -39,10 +39,9 @@ public class ProductViewController {
             Model model
     ) {
         List<Product> products;
-        
-        // Handle category filter
-        if (categoryId != null) {
-            List<Integer> categoryIds = Collections.singletonList(categoryId);
+
+        // Handle category filter for multiple IDs
+        if (categoryIds != null && !categoryIds.isEmpty()) {
             products = productService.getProductsByCategories(categoryIds);
         } 
         // Handle search with filters
@@ -57,7 +56,7 @@ public class ProductViewController {
         // Add all necessary attributes to the model
         model.addAttribute("products", products);
         model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("selectedCategory", categoryId);
+        model.addAttribute("selectedCategories", categoryIds);
         model.addAttribute("searchTerm", searchTerm);
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
@@ -65,6 +64,5 @@ public class ProductViewController {
 
         return "products";
     }
-
 
 }

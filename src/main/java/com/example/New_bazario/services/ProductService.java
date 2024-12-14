@@ -56,6 +56,9 @@ public class ProductService {
     }
 
     public List<Product> getProductsByCategories(List<Integer> categoryIds) {
+    	if (categoryIds == null || categoryIds.isEmpty()) {
+            return getAllProducts();
+        }
         return productRepository.findProductsByCategoryIds(categoryIds);
     }
     public List<Product> searchProducts(String searchTerm) {

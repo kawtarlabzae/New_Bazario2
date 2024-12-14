@@ -15,33 +15,53 @@
     
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto p-6">
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h1 class="text-2xl font-bold mb-6">Products</h1>
-            
-            <!-- No results message -->
-            <div th:if="${#lists.isEmpty(products)}" class="text-gray-500">
-                No products found.
+        <h1 class="text-2xl font-bold mb-6">Products</h1>
+        
+    
+        </div>
+        
+        <!-- No results message -->
+        <div th:if="${#lists.isEmpty(products)}" class="text-gray-500 mt-6">
+            No products found.
+        </div>
+
+        <!-- Product Grid -->
+        <div th:if="${not #lists.isEmpty(products)}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+            <!-- Loop through products -->
+            <div th:each="product : ${products}" class="bg-white border rounded-lg shadow-md overflow-hidden">
+                <!-- Product Image -->
+                <div class="w-full h-48 overflow-hidden">
+                    <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}" 
+                         th:src="${product.imageUrl}" 
+                         alt="Product Image" 
+                         class="w-full h-full object-cover">
+                    <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}" 
+                         src="/default-product-image.jpg" 
+                         alt="Default Image" 
+                         class="w-full h-full object-cover">
+                </div>
+
+                <!-- Product Info -->
+                <div class="p-4">
+                    <!-- Product Name -->
+                    <h3 class="text-lg font-bold text-gray-800" th:text="${product.name}"></h3>
+                    
+                    <!-- Product Description -->
+                    <p class="text-sm text-gray-500 mt-2" th:text="${product.description}"></p>
+                    
+                    <!-- Price -->
+                    <p class="text-lg font-semibold text-indigo-600 mt-2" th:text="'$' + ${product.price}"></p>
+                    
+                    <!-- Stock -->
+                    <p class="text-sm mt-2">
+                        <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}" 
+                              class="text-green-600 font-medium" 
+                              th:text="'In Stock: ' + ${product.stockQuantity}"></span>
+                        <span th:unless="${product.stockQuantity != null and product.stockQuantity > 0}" 
+                              class="text-red-600 font-medium">Out of Stock</span>
+                    </p>
+                </div>
             </div>
-            
-            <!-- Products table -->
-            <table th:if="${not #lists.isEmpty(products)}" class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr th:each="product : ${products}">
-                        <td class="px-6 py-4 whitespace-nowrap" th:text="${product.name}"></td>
-                        <td class="px-6 py-4 whitespace-nowrap" th:text="${product.price}"></td>
-                        <td class="px-6 py-4 whitespace-nowrap" th:text="${product.stockQuantity}"></td>
-                        <td class="px-6 py-4 whitespace-nowrap" th:text="${product.categoryId}"></td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </body>
