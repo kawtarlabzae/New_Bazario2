@@ -1,10 +1,9 @@
 package com.example.New_bazario.controllers;
 
+import com.example.New_bazario.entities.Category;
 import com.example.New_bazario.entities.Product;
 import com.example.New_bazario.services.CategoryService;
 import com.example.New_bazario.services.ProductService;
-
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/products")
 public class ProductViewController {
     private final ProductService productService;
-    private final CategoryService categoryService; // Add this
+    private final CategoryService categoryService;
 
     @Autowired
     public ProductViewController(ProductService productService, CategoryService categoryService) {
@@ -31,38 +30,39 @@ public class ProductViewController {
 
     @GetMapping
     public String listProducts(
-            @RequestParam(required = false) List<Integer> categoryIds, // Accept multiple category IDs
+            @RequestParam(required = false) List<Integer> categoryIds,
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) Integer minStock,
-            Model model
-    ) {
-        List<Product> products;
+            Model model) {
 
-        // Handle category filter for multiple IDs
-        if (categoryIds != null && !categoryIds.isEmpty()) {
-            products = productService.getProductsByCategories(categoryIds);
-        } 
-        // Handle search with filters
-        else if (searchTerm != null || minPrice != null || maxPrice != null || minStock != null) {
-            products = productService.advancedFilterProducts(null, minPrice, maxPrice, minStock, searchTerm);
-        } 
-        // Default - show all products
-        else {
-            products = productService.getAllProducts();
+        // Initialize categoryIds if null
+        if (categoryIds == null) {
+            categoryIds = new ArrayList<>();
         }
 
-        // Add all necessary attributes to the model
-        model.addAttribute("products", products);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("selectedCategories", categoryIds);
-        model.addAttribute("searchTerm", searchTerm);
-        model.addAttribute("minPrice", minPrice);
-        model.addAttribute("maxPrice", maxPrice);
-        model.addAttribute("minStock", minStock);
+        try {
+            // Fetch categories for UI
+            List<Category> categories = categoryService.getAllCategories();
+            model.addAttribute("categories", categories);
 
-        return "products";
+            // Apply all filters together
+            List<Product> products = productService.advancedFilterProducts(
+                categoryIds, minPrice, maxPrice, minStock, searchTerm);
+
+            // Add filtered products and filter state to the model
+            model.addAttribute("products", products != null ? products : new ArrayList<>());
+            model.addAttribute("selectedCategories", categoryIds);
+            model.addAttribute("searchTerm", searchTerm);
+            model.addAttribute("minPrice", minPrice);
+            model.addAttribute("maxPrice", maxPrice);
+            model.addAttribute("minStock", minStock);
+
+            return "products";
+        } catch (Exception e) {
+            e.printStackTrace(); // This will help with debugging
+            throw e;
+        }
     }
-
 }

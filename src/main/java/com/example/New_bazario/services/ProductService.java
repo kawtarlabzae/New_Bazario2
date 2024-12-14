@@ -74,16 +74,19 @@ public class ProductService {
             BigDecimal minPrice,
             BigDecimal maxPrice,
             Integer minStock,
-            String name
-    ) {
+            String name) {
+
+        // Fetch all products from the database
         List<Product> products = productRepository.findAll();
 
+        // Apply all filters
         return products.stream()
-                .filter(product -> (categoryIds == null || categoryIds.contains(product.getCategoryId())))
+                .filter(product -> (categoryIds == null || categoryIds.isEmpty() || categoryIds.contains(product.getCategoryId())))
                 .filter(product -> (minPrice == null || product.getPrice().compareTo(minPrice) >= 0))
                 .filter(product -> (maxPrice == null || product.getPrice().compareTo(maxPrice) <= 0))
                 .filter(product -> (minStock == null || product.getStockQuantity() >= minStock))
                 .filter(product -> (name == null || product.getName().toLowerCase().contains(name.toLowerCase())))
                 .collect(Collectors.toList());
     }
+
 }

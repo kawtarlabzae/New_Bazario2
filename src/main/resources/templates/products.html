@@ -10,16 +10,13 @@
 </head>
 <body>
     <!-- Include the header -->
-    <div th:replace="header :: header"></div>
-    <div th:replace="search :: search"></div>
-    
+    <div th:replace="~{header :: header}"></div>
+    <div th:replace="~{search :: search}"></div>
+
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto p-6">
         <h1 class="text-2xl font-bold mb-6">Products</h1>
-        
-    
-        </div>
-        
+
         <!-- No results message -->
         <div th:if="${#lists.isEmpty(products)}" class="text-gray-500 mt-6">
             No products found.
@@ -31,13 +28,13 @@
             <div th:each="product : ${products}" class="bg-white border rounded-lg shadow-md overflow-hidden">
                 <!-- Product Image -->
                 <div class="w-full h-48 overflow-hidden">
-                    <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}" 
-                         th:src="${product.imageUrl}" 
-                         alt="Product Image" 
+                    <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
+                         th:src="${product.imageUrl}"
+                         alt="Product Image"
                          class="w-full h-full object-cover">
-                    <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}" 
-                         src="/default-product-image.jpg" 
-                         alt="Default Image" 
+                    <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
+                         src="/default-product-image.jpg"
+                         alt="Default Image"
                          class="w-full h-full object-cover">
                 </div>
 
@@ -45,19 +42,19 @@
                 <div class="p-4">
                     <!-- Product Name -->
                     <h3 class="text-lg font-bold text-gray-800" th:text="${product.name}"></h3>
-                    
+
                     <!-- Product Description -->
                     <p class="text-sm text-gray-500 mt-2" th:text="${product.description}"></p>
-                    
+
                     <!-- Price -->
                     <p class="text-lg font-semibold text-indigo-600 mt-2" th:text="'$' + ${product.price}"></p>
-                    
+
                     <!-- Stock -->
                     <p class="text-sm mt-2">
-                        <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}" 
-                              class="text-green-600 font-medium" 
+                        <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}"
+                              class="text-green-600 font-medium"
                               th:text="'In Stock: ' + ${product.stockQuantity}"></span>
-                        <span th:unless="${product.stockQuantity != null and product.stockQuantity > 0}" 
+                        <span th:unless="${product.stockQuantity != null and product.stockQuantity > 0}"
                               class="text-red-600 font-medium">Out of Stock</span>
                     </p>
                 </div>

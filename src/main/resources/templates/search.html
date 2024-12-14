@@ -2,82 +2,74 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="search">
-        <div class="max-w-7xl mx-auto p-6">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <!-- Search Form - Changed action to /products -->
-                <form th:action="@{/products}" method="get" class="space-y-6">
-                    <!-- Main Search Bar -->
-                    <div class="flex gap-4">
-                        <input type="text"
-                               name="searchTerm"
-                               class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                               placeholder="Search for products..."
-                               th:value="${searchTerm}">
-                    </div>
-
-                    <!-- Advanced Filters -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Price Range -->
-                        <div class="space-y-2">
-                            <label class="block text-sm font-medium text-gray-700">Price Range</label>
-                            <div class="flex gap-2">
-                                <input type="number" 
-                                       name="minPrice" 
-                                       step="0.01"
-                                       class="w-full rounded-md border-gray-300" 
-                                       placeholder="Min Price"
-                                       th:value="${minPrice}">
-                                <input type="number" 
-                                       name="maxPrice" 
-                                       step="0.01"
-                                       class="w-full rounded-md border-gray-300" 
-                                       placeholder="Max Price"
-                                       th:value="${maxPrice}">
-                            </div>
-                        </div>
-
-                        <!-- Min Stock -->
-                        <div class="space-y-2">
-                            <label class="block text-sm font-medium text-gray-700">Minimum Stock</label>
-                            <input type="number" 
-                                   name="minStock" 
-                                   class="w-full rounded-md border-gray-300" 
-                                   placeholder="Min Stock"
-                                   th:value="${minStock}">
-                        </div>
-
-                        <!-- Search Button -->
-                        <div class="flex items-end">
-                            <button type="submit" 
-                                    class="w-full bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                Search
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Category Filters -->
-                    <!-- Category Filters -->
-<div class="mt-4">
-    <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
-    <div class="flex flex-wrap gap-2">
-        <!-- Add checkboxes for multiple category selection -->
-        <div th:each="category : ${categories}" class="flex items-center space-x-2">
-            <input type="checkbox" 
-                   name="categoryIds" 
-                   th:value="${category.id}" 
-                   th:checked="${selectedCategories != null and selectedCategories.contains(category.id)}" 
-                   class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
-            <label th:for="${'category-' + category.id}" 
-                   class="text-sm font-medium text-gray-700"
-                   th:text="${category.name}">
-            </label>
-        </div>
-    </div>
-</div>
-
-                </form>
+        <form th:action="@{/products}" method="get" class="space-y-6">
+            <!-- Main Search Bar -->
+            <div class="flex gap-4">
+                <input type="text"
+                       name="searchTerm"
+                       class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                       placeholder="Search for products..."
+                       th:value="${searchTerm}">
             </div>
-        </div>
+
+            <!-- Advanced Filters -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Price Range -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Price Range</label>
+                    <div class="flex gap-2">
+                        <input type="number"
+                               name="minPrice"
+                               step="0.01"
+                               class="w-full rounded-md border-gray-300"
+                               placeholder="Min Price"
+                               th:value="${minPrice}">
+                        <input type="number"
+                               name="maxPrice"
+                               step="0.01"
+                               class="w-full rounded-md border-gray-300"
+                               placeholder="Max Price"
+                               th:value="${maxPrice}">
+                    </div>
+                </div>
+
+                <!-- Min Stock -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Minimum Stock</label>
+                    <input type="number"
+                           name="minStock"
+                           class="w-full rounded-md border-gray-300"
+                           placeholder="Min Stock"
+                           th:value="${minStock}">
+                </div>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
+                <div class="flex flex-wrap gap-2">
+                    <div th:each="category : ${categories}" class="flex items-center space-x-2">
+                        <input type="checkbox"
+                               name="categoryIds"
+                               th:value="${category.id}"
+                               th:checked="${selectedCategories != null and selectedCategories.contains(category.id)}"
+                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                        <label th:for="${'category-' + category.id}"
+                               class="text-sm font-medium text-gray-700"
+                               th:text="${category.name}">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Button -->
+            <div class="flex items-end">
+                <button type="submit"
+                        class="w-full bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    Search
+                </button>
+            </div>
+        </form>
     </div>
 </body>
 </html>
