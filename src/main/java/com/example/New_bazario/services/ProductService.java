@@ -6,6 +6,7 @@ import com.example.New_bazario.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,14 @@ public class ProductService {
 
     public List<Product> getProductsByCategories(List<Integer> categoryIds) {
         return productRepository.findProductsByCategoryIds(categoryIds);
+    }
+    public List<Product> searchProducts(String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return productRepository.findAll().stream()
+                    .filter(product -> product.getName().toLowerCase().contains(searchTerm.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
     public List<Product> advancedFilterProducts(
             List<Integer> categoryIds,

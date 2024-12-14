@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/header.css" rel="stylesheet">
+</head>
+
+<body>
+    <div th:fragment="header">
+        <header>
+            <div class="header-container">
+                <div class="logo-section">
+                    <div class="logo-placeholder"></div>
+                </div>
+
+                <nav>
+                    <ul>
+                        <li><a href="/" class="active">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a></li>
+                        <li><a href="/products">
+                            <i class="fas fa-box"></i>
+                            <span>Products</span>
+                        </a></li>
+                        <li><a href="/cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart</span>
+                        </a></li>
+                        <li><a href="/orders">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Orders</span>
+                        </a></li>
+                    </ul>
+                </nav>
+
+                <div class="profile-section">
+                    <button class="profile-button">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+    </div>
+</body>
