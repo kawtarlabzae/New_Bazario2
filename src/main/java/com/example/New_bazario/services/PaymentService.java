@@ -7,7 +7,6 @@ import com.example.New_bazario.repositories.PaymentRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-
 @Service
 public class PaymentService {
 
@@ -20,9 +19,25 @@ public class PaymentService {
     }
 
     public Payment createPayment(Integer orderId, String paymentMethod, String paymentStatus, String transactionId) {
+        // Find the associated order
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+
+        // Ensure the order is in the correct state
+        if (!order.getStatus().equalsIgnoreCase("PENDING")) {
+            throw new RuntimeException("Order is not in a valid state for payment.");
+        }
+
+        // Create a payment instance
         Payment payment = new Payment(paymentMethod, paymentStatus, transactionId, LocalDateTime.now(), order);
-        return paymentRepository.save(payment);
+        Payment savedPayment = paymentRepository.save(payment);
+
+        // Update the order status if payment is successful
+        if ("SUCCESS".equalsIgnoreCase(paymentStatus)) {
+            order.setStatus("PAID");
+            orderRepository.save(order);
+        }
+
+        return savedPayment;
     }
 }
