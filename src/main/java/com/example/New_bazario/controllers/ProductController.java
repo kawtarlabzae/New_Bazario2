@@ -33,7 +33,16 @@ public class ProductController {
     public Product getProductById(@PathVariable Integer id) {
         return productService.getProductById(id);
     }
+    @PutMapping("/{productId}")
+    public Product updateProduct(@PathVariable Integer productId, @RequestBody Product updatedProduct) {
+        return productService.updateProduct(productId, updatedProduct);
+    }
 
+    @DeleteMapping("/{productId}")
+    public String deleteProduct(@PathVariable Integer productId) {
+        productService.deleteProduct(productId);
+        return "Product with ID " + productId + " deleted successfully.";
+    }
     @GetMapping
     public List<Product> getFilteredProducts(
             @RequestParam(required = false) List<Integer> categoryIds,
@@ -48,16 +57,5 @@ public class ProductController {
         return productService.advancedFilterProducts(categoryIds, minPrice, maxPrice, minStock, name);
     }
 
-    @PutMapping("/{id}")
-    public Product updateProduct(
-            @PathVariable Integer id,
-            @RequestParam Integer categoryId,
-            @RequestBody Product updatedProduct) {
-        return productService.updateProduct(id, updatedProduct, categoryId);
-    }
 
-    @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Integer id) {
-        productService.deleteProduct(id);
-    }
 }
