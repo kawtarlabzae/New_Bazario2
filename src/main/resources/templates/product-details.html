@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/header.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div th:replace="~{header :: header}"></div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <a href="/products" class="text-indigo-600 hover:underline">
+                <i class="fas fa-arrow-left"></i> Back to Products
+            </a>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+                <!-- Product Image -->
+                <div class="overflow-hidden rounded-lg shadow">
+                    <img th:src="${product.imageUrl}" alt="Product Image" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Product Details -->
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900" th:text="${product.name}"></h1>
+                    <p class="text-xl text-indigo-600 mt-2" th:text="'$' + ${product.price}"></p>
+
+                    <p class="mt-4 text-sm">
+                        <span th:if="${product.stockQuantity > 0}"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                            th:text="'In Stock: ' + ${product.stockQuantity}"></span>
+                        <span th:unless="${product.stockQuantity > 0}"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            Out of Stock
+                        </span>
+                    </p>
+
+                    <p class="mt-4 text-gray-600" th:text="${product.description}"></p>
+                    <p class="mt-4 text-gray-600" th:text="'Category: ' + ${category.name}"></p>
+
+                    <p class="mt-4 text-sm text-gray-500">Created: <span th:text="${product.createdAt}"></span></p>
+                    <p class="text-sm text-gray-500">Last Updated: <span th:text="${product.updatedAt}"></span></p>
+                    <!-- Add to Cart Form -->
+                    <div th:if="${session.userId}">
+                        <form th:action="@{/cart-items}" method="post" class="mt-6" th:if="${product.stockQuantity > 0}">
+                            <input type="hidden" name="productId" th:value="${product.productId}">
+
+                            <div class="mt-4">
+                                <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity:</label>
+                                <input type="number" id="quantity" name="quantity" min="1"
+                                    th:max="${product.stockQuantity}" value="1"
+                                    class="mt-1 block w-24 p-2 border border-gray-300 rounded-md shadow-sm
+                                        focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+
+                            <button type="submit"
+                                class="mt-4 inline-flex justify-center items-center px-4 py-2 border border-transparent
+                                    text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700
+                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Add to Cart
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Show login message if user is not authenticated -->
+                    <div th:unless="${session.userId}" class="mt-6">
+                        <p class="text-gray-600">
+							<span th:text="${session.userId}">
+                            Please <a href="/login" class="text-indigo-600 hover:text-indigo-500">login</a> to add items to cart.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

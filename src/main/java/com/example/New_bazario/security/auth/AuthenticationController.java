@@ -7,59 +7,78 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.New_bazario.security.auth.AuthenticationResponse;
+import com.example.New_bazario.security.user.User;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
+    private final AuthenticationService service;
 
     public AuthenticationController(AuthenticationService service) {
-		super();
-		this.service = service;
-	}
-
-	private final AuthenticationService service;
+        this.service = service;
+    }
 
     @GetMapping("/register")
     public String showRegisterPage() {
-        return "register"; // Render register.html
+        return "register";
     }
 
     @GetMapping("/authenticate")
     public String showAuthenticatePage() {
-        return "authenticate"; // Render authenticate.html
+        return "authenticate";
     }
 
     @PostMapping("/register")
     public String register(@ModelAttribute RegisterRequest request) {
-        service.register(request); // Register the user
-        return "redirect:/api/v1/auth/authenticate"; // Redirect to authentication page
+        service.register(request);
+        return "redirect:/api/v1/auth/authenticate";
     }
 
     @PostMapping("/authenticate")
-    public String authenticate(@ModelAttribute AuthenticationRequest request, Model model) {
+    public String authenticate(
+            @ModelAttribute AuthenticationRequest request, 
+            Model model,
+            HttpSession session) {
         try {
             AuthenticationResponse response = service.authenticate(request);
-
-            // Check if the response contains a valid token
+            
             if (response != null && response.getToken() != null && !response.getToken().isEmpty()) {
-            	
-                return "redirect:/api/v1/auth/dashboard"; // Redirect to dashboard if authenticated
+                // Get user details and store in session
+                User user = service.getUserByEmail(request.getEmail());
+                session.setAttribute("userId", user.getId());
+                session.setAttribute("userEmail", user.getEmail());
+                session.setAttribute("userName", user.getFirstname() + " " + user.getLastname());
+                session.setAttribute("token", response.getToken());
+                
+                return "redirect:/products";
             } else {
-                // Add error message to model if the token is null/empty
                 model.addAttribute("error", "Invalid credentials. Please try again.");
-                return "authenticate"; // Stay on the authentication page
+                return "authenticate";
             }
         } catch (Exception e) {
-            // Handle authentication exceptions gracefully
             model.addAttribute("error", "Invalid credentials. Please try again.");
-            return "authenticate"; // Stay on the authentication page
+            return "authenticate";
         }
     }
 
     @GetMapping("/dashboard")
-    public String showDashboard() {
-        return "dashboard"; // Render dashboard.html
+    public String showDashboard(HttpSession session, Model model) {
+        // Check if user is logged in
+        if (session.getAttribute("userId") == null) {
+            return "redirect:/api/v1/auth/authenticate";
+        }
+        
+        // Add user information to model
+        model.addAttribute("userName", session.getAttribute("userName"));
+        return "dashboard";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/api/v1/auth/authenticate";
     }
 }

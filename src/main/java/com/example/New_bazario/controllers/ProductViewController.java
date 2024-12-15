@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,30 +29,36 @@ public class ProductViewController {
         this.categoryService = categoryService;
     }
 
+    // Product listing endpoint
     @GetMapping
     public String listProducts(
-            @RequestParam(required = false) List<Integer> categoryIds,
+            @RequestParam(required = false, defaultValue = "") List<Integer> categoryIds,
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) Integer minStock,
             Model model) {
 
-        // Initialize categoryIds if null
-        if (categoryIds == null) {
-            categoryIds = new ArrayList<>();
-        }
-
         try {
+            // Ensure categoryIds is never null
+            if (categoryIds == null) {
+                categoryIds = new ArrayList<>();
+            }
+
             // Fetch categories for UI
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
 
-            // Apply all filters together
-            List<Product> products = productService.advancedFilterProducts(
-                categoryIds, minPrice, maxPrice, minStock, searchTerm);
+            // Fetch products with filters
+            List<Product> products;
+            if (!categoryIds.isEmpty()) {
+                products = productService.getProductsByCategories(categoryIds);
+            } else {
+                products = productService.advancedFilterProducts(
+                    categoryIds, minPrice, maxPrice, minStock, searchTerm);
+            }
 
-            // Add filtered products and filter state to the model
+            // Add everything to model
             model.addAttribute("products", products != null ? products : new ArrayList<>());
             model.addAttribute("selectedCategories", categoryIds);
             model.addAttribute("searchTerm", searchTerm);
@@ -61,8 +68,30 @@ public class ProductViewController {
 
             return "products";
         } catch (Exception e) {
-            e.printStackTrace(); // This will help with debugging
-            throw e;
+            e.printStackTrace();
+            model.addAttribute("error", "An error occurred while fetching products");
+            model.addAttribute("products", new ArrayList<>());
+            return "products";
+        }
+    }
+
+    // Product details endpoint
+    @GetMapping("/{productId}")
+    public String getProductDetails(@PathVariable Integer productId, Model model) {
+        try {
+            Product product = productService.getProductById(productId);
+            Category category = categoryService.getCategoryById(product.getCategoryId());
+            
+            // Add these debug prints
+            System.out.println("Product ID: " + product.getProductId());
+            System.out.println("Category: " + category.getName());
+            
+            model.addAttribute("product", product);
+            model.addAttribute("category", category);
+            return "product-details";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/error";
         }
     }
 }

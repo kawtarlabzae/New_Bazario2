@@ -93,7 +93,13 @@
 <div class="header">
     <h1>Product Dashboard</h1>
 </div>
-
+<!-- Add this to your dashboard.html -->
+<div class="user-info">
+    <p>Welcome, <span th:text="${session.userName}">User</span>!</p>
+    <form action="/api/v1/auth/logout" method="post">
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</div>
 <div class="container">
     <div class="grid">
         <!-- Example Product Card -->
