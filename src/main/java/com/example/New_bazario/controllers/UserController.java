@@ -2,11 +2,12 @@ package com.example.New_bazario.controllers;
 
 import com.example.New_bazario.security.user.User;
 import com.example.New_bazario.security.user.UserRepository;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/profile")
@@ -19,14 +20,20 @@ public class UserController {
     }
 
     @GetMapping
-    public String showProfilePage(@AuthenticationPrincipal User user, Model model) {
-        if (user == null) {
-            System.out.println("No user found in the SecurityContext. Redirecting to authenticate.");
+    public String showProfilePage(HttpSession session, Model model) {
+        // Retrieve user ID from session
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) {
+            System.out.println("No user found in session. Redirecting to authenticate.");
             return "redirect:/api/v1/auth/authenticate";
         }
-        System.out.println("Authenticated user: " + user.getEmail());
+
+        // Retrieve user from database
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+        System.out.println("HELLO USER");
+        // Add user details to the model
         model.addAttribute("user", user);
         return "profile";
     }
-
 }
