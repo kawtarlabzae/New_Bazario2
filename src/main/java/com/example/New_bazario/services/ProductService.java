@@ -55,12 +55,6 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-    public List<Product> getProductsByCategories(List<Integer> categoryIds) {
-    	if (categoryIds == null || categoryIds.isEmpty()) {
-            return getAllProducts();
-        }
-        return productRepository.findProductsByCategoryIds(categoryIds);
-    }
     public List<Product> searchProducts(String searchTerm) {
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             return productRepository.findAll().stream()
@@ -75,18 +69,9 @@ public class ProductService {
             BigDecimal maxPrice,
             Integer minStock,
             String name) {
-
-        // Fetch all products from the database
-        List<Product> products = productRepository.findAll();
-
-        // Apply all filters
-        return products.stream()
-                .filter(product -> (categoryIds == null || categoryIds.isEmpty() || categoryIds.contains(product.getCategoryId())))
-                .filter(product -> (minPrice == null || product.getPrice().compareTo(minPrice) >= 0))
-                .filter(product -> (maxPrice == null || product.getPrice().compareTo(maxPrice) <= 0))
-                .filter(product -> (minStock == null || product.getStockQuantity() >= minStock))
-                .filter(product -> (name == null || product.getName().toLowerCase().contains(name.toLowerCase())))
-                .collect(Collectors.toList());
+        // Delegate filtering to the database query
+        return productRepository.advancedFilter(categoryIds, minPrice, maxPrice, minStock, name);
     }
+
 
 }

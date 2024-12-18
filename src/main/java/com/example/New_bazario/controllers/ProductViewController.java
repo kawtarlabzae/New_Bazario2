@@ -29,10 +29,9 @@ public class ProductViewController {
         this.categoryService = categoryService;
     }
 
-    // Product listing endpoint
     @GetMapping
     public String listProducts(
-            @RequestParam(required = false, defaultValue = "") List<Integer> categoryIds,
+            @RequestParam(required = false) List<Integer> categoryIds,
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
@@ -50,13 +49,7 @@ public class ProductViewController {
             model.addAttribute("categories", categories);
 
             // Fetch products with filters
-            List<Product> products;
-            if (!categoryIds.isEmpty()) {
-                products = productService.getProductsByCategories(categoryIds);
-            } else {
-                products = productService.advancedFilterProducts(
-                    categoryIds, minPrice, maxPrice, minStock, searchTerm);
-            }
+            List<Product> products = productService.advancedFilterProducts(categoryIds, minPrice, maxPrice, minStock, searchTerm);
 
             // Add everything to model
             model.addAttribute("products", products != null ? products : new ArrayList<>());
@@ -74,6 +67,7 @@ public class ProductViewController {
             return "products";
         }
     }
+
 
     // Product details endpoint
     @GetMapping("/{productId}")
