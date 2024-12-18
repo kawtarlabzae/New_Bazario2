@@ -36,4 +36,11 @@ public class UserController {
         model.addAttribute("user", user);
         return "profile";
     }
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        // Invalidate the session to log out the user
+        session.invalidate();
+        System.out.println("User session invalidated. Logging out.");
+        return "redirect:/products"; // Redirect to the login page
+    }
 }
