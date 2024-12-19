@@ -1,16 +1,13 @@
 package com.example.New_bazario.controllers;
 
-import com.example.New_bazario.entities.Cart;
 import com.example.New_bazario.entities.CartItem;
 import com.example.New_bazario.services.CartItemService;
-import com.example.New_bazario.services.CartService;
 
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,36 +18,11 @@ import java.util.stream.Collectors;
 public class CartItemController {
 
     private final CartItemService cartItemService;
-    private final CartService cartService;
-    public CartItemController(CartItemService cartItemService,CartService cartService) {
+
+    public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
-		this.cartService = cartService;
     }
 
-    @GetMapping
-    public String getCartItems(HttpSession session, Model model) {
-        // Retrieve the user's cart ID from the session
-        Integer userId = (Integer) session.getAttribute("userId");
-        Integer cartId = (Integer) session.getAttribute("cartId");
-
-        if (userId == null || cartId == null) {
-            model.addAttribute("error", "No cart found for the current user.");
-            return "cart";
-        }
-
-        // Fetch cart items for the user's cart
-        List<CartItem> cartItems = cartItemService.getCartItemsByCartId(cartId);
-        model.addAttribute("cartItems", cartItems);
-
-        // Calculate the total cost of the items
-        double total = cartItems.stream()
-                .mapToDouble(item -> item.getQuantity() * item.getProduct().getPrice().doubleValue())
-                .sum();
-        model.addAttribute("total", total);
-
-        return "cart";
-    }
-    
     @PostMapping
     public CartItem addCartItem(
             @RequestParam Integer productId,

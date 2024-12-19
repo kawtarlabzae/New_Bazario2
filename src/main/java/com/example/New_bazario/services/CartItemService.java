@@ -1,6 +1,5 @@
 package com.example.New_bazario.services;
 
-import com.example.New_bazario.entities.Cart;
 import com.example.New_bazario.entities.CartItem;
 import com.example.New_bazario.entities.Product;
 import com.example.New_bazario.repositories.CartItemRepository;
@@ -20,12 +19,12 @@ public class CartItemService {
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
-    private final UserRepository userRepository; // Add this
+    private final UserRepository userRepository;
 
     public CartItemService(CartItemRepository cartItemRepository, 
-                         CartRepository cartRepository, 
-                         ProductRepository productRepository,
-                         UserRepository userRepository) {
+                           CartRepository cartRepository, 
+                           ProductRepository productRepository,
+                           UserRepository userRepository) {
         this.cartItemRepository = cartItemRepository;
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
@@ -37,38 +36,27 @@ public class CartItemService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
         
-        Cart cart = user.getCart();
-        if (cart == null) {
-            cart = new Cart();
-            cart.setCreatedAt(LocalDateTime.now());
-            cart.setUpdatedAt(LocalDateTime.now());
-            cart = cartRepository.save(cart);
-            user.setCart(cart);
-            userRepository.save(user);
+        Integer cartId = user.getCart().getCartId();
+        if (cartId == null) {
+            throw new RuntimeException("Cart not found for user with ID: " + userId);
         }
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
 
-        // Check if product is already in cart
         CartItem cartItem = cartItemRepository
-                .findByCart_CartIdAndProduct_ProductId(cart.getCartId(), productId)
+                .findByCartIdAndProduct_ProductId(cartId, productId)
                 .orElse(null);
 
         if (cartItem != null) {
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
         } else {
-            cartItem = new CartItem(cart, product, quantity);
+            cartItem = new CartItem(cartId, product, quantity);
         }
 
-        cartItem = cartItemRepository.save(cartItem);
-
-        cartRepository.save(cart);
-
-        return cartItem;
+        return cartItemRepository.save(cartItem);
     }
-    
-    
+
     public List<CartItem> getCartItemsByCartId(Integer cartId) {
         return cartItemRepository.findCartItemsWithProductsByCartId(cartId);
     }

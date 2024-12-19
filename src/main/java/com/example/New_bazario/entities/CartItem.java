@@ -11,20 +11,19 @@ public class CartItem {
     private Integer cartItemId;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id", nullable = false)
-    private Cart cart;
-
-    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     private Integer quantity;
 
+    @Column(name = "cart_id", nullable = false) // Foreign key to Cart
+    private Integer cartId; // Store the cart ID instead of a direct relationship
+
     // Constructors
     public CartItem() {}
 
-    public CartItem(Cart cart, Product product, Integer quantity) {
-        this.cart = cart;
+    public CartItem(Integer cartId, Product product, Integer quantity) {
+        this.cartId = cartId;
         this.product = product;
         this.quantity = quantity;
     }
@@ -38,12 +37,12 @@ public class CartItem {
         this.cartItemId = cartItemId;
     }
 
-    public Cart getCart() {
-        return cart;
+    public Integer getCartId() {
+        return cartId;
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setCartId(Integer cartId) {
+        this.cartId = cartId;
     }
 
     public Product getProduct() {

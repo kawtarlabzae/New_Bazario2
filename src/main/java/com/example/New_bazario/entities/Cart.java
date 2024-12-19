@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.example.New_bazario.security.user.User;
-
 @Entity
 @Table(name = "_cart")
 public class Cart {
@@ -14,9 +12,8 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cartId;
 
-    
-
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "cart_id", referencedColumnName = "cartId") // Reference cartId in CartItem
     private Set<CartItem> cartItems;
 
     private LocalDateTime createdAt;
@@ -25,8 +22,7 @@ public class Cart {
     // Constructors
     public Cart() {}
 
-    public Cart( LocalDateTime createdAt, LocalDateTime updatedAt) {
-        
+    public Cart(LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -39,8 +35,6 @@ public class Cart {
     public void setCartId(Integer cartId) {
         this.cartId = cartId;
     }
-
-  
 
     public Set<CartItem> getCartItems() {
         return cartItems;
