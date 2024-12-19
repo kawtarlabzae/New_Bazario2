@@ -1,45 +1,34 @@
 package com.example.New_bazario.entities;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
-import com.example.New_bazario.security.user.User;
+import java.util.Set;
 
 @Entity
 @Table(name = "_order")
 public class Order {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Integer orderId;
 
-    private String status;
-    private BigDecimal totalPrice;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "order_id")
+    private Set<CartItem> orderItems;
+
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
-    private User user;
+    private boolean paid;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id", nullable = false)
-    private Cart cart;
-
-    // Constructors
+    // Constructors, Getters, and Setters
     public Order() {}
 
-    public Order(String status, BigDecimal totalPrice, LocalDateTime createdAt, LocalDateTime updatedAt, User user, Cart cart) {
-        this.status = status;
-        this.totalPrice = totalPrice;
+    public Order( LocalDateTime createdAt, boolean paid) {
+ 
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.user = user;
-        this.cart = cart;
+        this.paid = paid;
     }
 
-    // Getters and Setters
     public Integer getOrderId() {
         return orderId;
     }
@@ -48,20 +37,14 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public String getStatus() {
-        return status;
+   
+
+    public Set<CartItem> getOrderItems() {
+        return orderItems;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setOrderItems(Set<CartItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -72,27 +55,13 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public boolean isPaid() {
+        return paid;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
 }

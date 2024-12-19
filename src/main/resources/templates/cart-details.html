@@ -43,6 +43,16 @@
         <div class="mt-6 text-right">
             <h3 class="text-lg font-bold">Total Amount: <span th:text="${totalAmount}"></span></h3>
         </div>
+        
+        <!-- Add Order Button -->
+        <div class="mt-6 text-right">
+            <form th:action="@{/orders/create-from-cart}" method="post">
+                <button type="submit"
+                        class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Go to Add Order
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 </body>

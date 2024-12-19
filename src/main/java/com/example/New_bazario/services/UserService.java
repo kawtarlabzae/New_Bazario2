@@ -18,5 +18,21 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
         return user.getRole();
     }
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    }
+
+    /**
+     * Get a user by their ID.
+     *
+     * @param id The ID of the user.
+     * @return The user if found.
+     * @throws RuntimeException if the user is not found.
+     */
+    public User getUserById(Integer id) {
+        return userRepository.findUserById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+    }
 }
 

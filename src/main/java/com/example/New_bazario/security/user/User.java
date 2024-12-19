@@ -6,10 +6,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.New_bazario.entities.Cart;
+import com.example.New_bazario.entities.CartItem;
+import com.example.New_bazario.entities.Order;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "_user")
@@ -34,7 +37,20 @@ public class User implements UserDetails {
     @JoinColumn(name = "cartId", referencedColumnName = "cartId")
     private Cart cart;
 
-    @Enumerated(EnumType.STRING)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id", referencedColumnName = "id") // Reference cartId in CartItem
+    private Set<Order> orders;
+   
+    
+    public Set<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
+
+	@Enumerated(EnumType.STRING)
     private Role role;
 
     private String phoneNumber;

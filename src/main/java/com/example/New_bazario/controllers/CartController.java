@@ -2,7 +2,9 @@ package com.example.New_bazario.controllers;
 
 import com.example.New_bazario.entities.Cart;
 import com.example.New_bazario.entities.CartItem;
+import com.example.New_bazario.entities.Order;
 import com.example.New_bazario.services.CartService;
+import com.example.New_bazario.services.OrderService;
 import com.example.New_bazario.services.CartItemService;
 
 import jakarta.servlet.http.HttpSession;
@@ -25,10 +27,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class CartController {
     private final CartService cartService;
     private final CartItemService cartItemService;
-
-    public CartController(CartService cartService, CartItemService cartItemService) {
+    private final OrderService orderService;
+    public CartController(OrderService orderService,CartService cartService, CartItemService cartItemService) {
         this.cartService = cartService;
         this.cartItemService = cartItemService;
+        this.orderService=orderService;
     }
 
     @GetMapping
@@ -78,5 +81,7 @@ public class CartController {
         cartItemService.deleteCartItem(cartItemId);
         return "redirect:/cart"; // Refresh the cart page
     }
+   
+
 
 }
