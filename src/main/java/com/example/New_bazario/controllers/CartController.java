@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
-
 @Controller
 @RequestMapping("/cart")
 public class CartController {
@@ -44,7 +43,27 @@ public class CartController {
 
         List<CartItem> cartItems = cartItemService.getCartItemsByCartId(cartId);
 
-        model.addAttribute("cartItems", cartItems);
+        // Calculate the price for each item and the total amount
+        final BigDecimal[] totalAmount = {BigDecimal.ZERO};
+
+        List<Map<String, Object>> itemsWithPrice = cartItems.stream().map(item -> {
+            Map<String, Object> itemDetails = new HashMap<>();
+            itemDetails.put("itemName", item.getProduct().getName());
+            itemDetails.put("productDescription", item.getProduct().getDescription());
+            itemDetails.put("quantity", item.getQuantity());
+            itemDetails.put("pricePerUnit", item.getProduct().getPrice()); // Assuming this exists
+            BigDecimal itemTotal = item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+            itemDetails.put("totalPrice", itemTotal);
+
+            // Add to total amount
+            totalAmount[0] = totalAmount[0].add(itemTotal);
+
+            return itemDetails;
+        }).collect(Collectors.toList());
+
+        model.addAttribute("cartItems", itemsWithPrice);
+        model.addAttribute("totalAmount", totalAmount[0]);
+
         return "cart-details"; // Name of the HTML template (cart-details.html)
     }
 }
