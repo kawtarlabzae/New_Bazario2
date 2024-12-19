@@ -74,4 +74,12 @@ public class ProductService {
     }
 
 
+    public void updateStock(Integer productId, Integer stockQuantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
+        product.setStockQuantity(stockQuantity);
+        productRepository.save(product);
+
+
+    }
 }

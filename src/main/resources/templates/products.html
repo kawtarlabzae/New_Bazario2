@@ -57,14 +57,27 @@
 
                         <!-- Stock -->
                         <p class="text-sm mt-2">
-                            <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}"
-                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                                  th:text="'In Stock: ' + ${product.stockQuantity}"></span>
+    <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}"
+          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+          th:text="'In Stock: ' + ${product.stockQuantity}"></span>
                             <span th:unless="${product.stockQuantity != null and product.stockQuantity > 0}"
                                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                  Out of Stock
-                            </span>
+          Out of Stock
+    </span>
                         </p>
+
+                        <!-- Edit Stock -->
+                        <form th:if="${userRole.name() == 'ADMIN'}" th:action="@{/admin/update-stock}" method="post" class="mt-4">
+                            <input type="hidden" name="productId" th:value="${product.productId}">
+                            <div class="flex items-center">
+                                <input type="number" name="stockQuantity" th:value="${product.stockQuantity}" min="0" class="w-20 p-2 border rounded">
+                                <button type="submit" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                    Update Stock
+                                </button>
+                            </div>
+                        </form>
+
+
 
                         <!-- Details Button -->
                         <a th:href="@{/products/{id}(id=${product.productId})}"

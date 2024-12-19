@@ -2,9 +2,13 @@ package com.example.New_bazario.controllers;
 
 import com.example.New_bazario.entities.Category;
 import com.example.New_bazario.entities.Product;
+import com.example.New_bazario.security.user.Role;
+import com.example.New_bazario.security.user.User;
 import com.example.New_bazario.services.CategoryService;
 import com.example.New_bazario.services.ProductService;
 
+import com.example.New_bazario.services.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,11 +26,13 @@ import java.util.List;
 public class ProductViewController {
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final UserService userService;
 
     @Autowired
-    public ProductViewController(ProductService productService, CategoryService categoryService) {
+    public ProductViewController(ProductService productService, CategoryService categoryService, UserService userService) {
         this.productService = productService;
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -36,9 +42,21 @@ public class ProductViewController {
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) Integer minStock,
+            HttpSession session,
             Model model) {
 
         try {
+            // Fetch user role
+            Integer userId = (Integer) session.getAttribute("userId");
+            Role userRole = null;
+            if (userId != null) {
+                userRole = userService.getUserRoleById(userId);
+            }
+            model.addAttribute("userRole", userRole);
+            userRole = userService.getUserRoleById(userId);
+            model.addAttribute("userRole", userRole);
+            System.out.println("ROLE IS  " + userRole);
+
             // Ensure categoryIds is never null
             if (categoryIds == null) {
                 categoryIds = new ArrayList<>();
@@ -68,18 +86,16 @@ public class ProductViewController {
         }
     }
 
-
-    // Product details endpoint
     @GetMapping("/{productId}")
     public String getProductDetails(@PathVariable Integer productId, Model model) {
         try {
             Product product = productService.getProductById(productId);
             Category category = categoryService.getCategoryById(product.getCategoryId());
-            
+
             // Add these debug prints
             System.out.println("Product ID: " + product.getProductId());
             System.out.println("Category: " + category.getName());
-            
+
             model.addAttribute("product", product);
             model.addAttribute("category", category);
             return "product-details";
