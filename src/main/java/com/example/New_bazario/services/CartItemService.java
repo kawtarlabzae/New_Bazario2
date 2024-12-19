@@ -60,4 +60,8 @@ public class CartItemService {
     public List<CartItem> getCartItemsByCartId(Integer cartId) {
         return cartItemRepository.findCartItemsWithProductsByCartId(cartId);
     }
+
+    public void deleteCartItem(Integer cartItemId) {
+        cartItemRepository.deleteById(cartItemId);
+    }
 }

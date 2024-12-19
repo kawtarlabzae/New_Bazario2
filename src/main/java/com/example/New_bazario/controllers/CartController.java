@@ -48,6 +48,7 @@ public class CartController {
 
         List<Map<String, Object>> itemsWithPrice = cartItems.stream().map(item -> {
             Map<String, Object> itemDetails = new HashMap<>();
+            itemDetails.put("cartItemId", item.getCartItemId()); // Include cartItemId
             itemDetails.put("itemName", item.getProduct().getName());
             itemDetails.put("productDescription", item.getProduct().getDescription());
             itemDetails.put("quantity", item.getQuantity());
@@ -66,4 +67,16 @@ public class CartController {
 
         return "cart-details"; // Name of the HTML template (cart-details.html)
     }
+
+    @PostMapping("/cart-items/delete")
+    public String deleteCartItem(@RequestParam("cartItemId") Integer cartItemId, HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        System.out.println("we want to remove " + cartItemId);
+        if (userId == null) {
+            return "Error"; // Redirect to an error page
+        }
+        cartItemService.deleteCartItem(cartItemId);
+        return "redirect:/cart"; // Refresh the cart page
+    }
+
 }
