@@ -5,6 +5,7 @@ import com.example.New_bazario.services.CartItemService;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,19 +25,23 @@ public class CartItemController {
     }
 
     @PostMapping
-    public CartItem addCartItem(
+    public ResponseEntity<Void> addCartItem(
             @RequestParam Integer productId,
             @RequestParam Integer quantity,
             HttpSession session) {
-        
+
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
             throw new RuntimeException("User not authenticated");
         }
 
-        return cartItemService.addCartItem(userId, productId, quantity);
-    }
+        cartItemService.addCartItem(userId, productId, quantity);
 
+        // Redirect to /products
+        return ResponseEntity.status(302)
+                             .header("Location", "/products")
+                             .build();
+    }
     @GetMapping("/{cartId}")
     public List<Map<String, Object>> getCartItemsByCartId(@PathVariable Integer cartId) {
         return cartItemService.getCartItemsByCartId(cartId).stream()
