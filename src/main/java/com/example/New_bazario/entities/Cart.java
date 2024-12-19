@@ -14,9 +14,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cartId;
 
-    @OneToOne
-    @JoinColumn(name = "id", nullable = false)
-    private User user;
+    
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems;
@@ -27,8 +25,8 @@ public class Cart {
     // Constructors
     public Cart() {}
 
-    public Cart(User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.user = user;
+    public Cart( LocalDateTime createdAt, LocalDateTime updatedAt) {
+        
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -42,13 +40,7 @@ public class Cart {
         this.cartId = cartId;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+  
 
     public Set<CartItem> getCartItems() {
         return cartItems;

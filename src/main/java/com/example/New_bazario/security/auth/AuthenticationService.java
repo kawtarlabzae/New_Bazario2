@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.New_bazario.entities.Cart;
 import com.example.New_bazario.security.config.JwtService;
 import com.example.New_bazario.security.user.Role;
 import com.example.New_bazario.security.user.User;
@@ -30,16 +31,23 @@ public class AuthenticationService {
 	}
 
 	public AuthenticationResponse register(RegisterRequest request) {
-		var user= User.builder()
-				.firstname(request.getFirstname())
-				.lastname(request.getLastname())
-				.email(request.getEmail())
-				.password(passwordEncoder.encode(request.getPassword()))
-				.role(Role.USER)
-				.activity(request.getActivity())
-				.phoneNumber(request.getPhoneNumber())
-				.createdAt(LocalDateTime.now()) 
-				.build();
+		var cart = new Cart();
+	    cart.setCreatedAt(LocalDateTime.now());
+	    cart.setUpdatedAt(LocalDateTime.now());
+
+	    var user = User.builder()
+	            .firstname(request.getFirstname())
+	            .lastname(request.getLastname())
+	            .email(request.getEmail())
+	            .password(passwordEncoder.encode(request.getPassword()))
+	            .role(Role.USER)
+	            .activity(request.getActivity())
+	            .phoneNumber(request.getPhoneNumber())
+	            .createdAt(LocalDateTime.now())
+	            .updatedAt(LocalDateTime.now())
+	            .cart(cart) 
+	            .build();
+		
 		repository.save(user);
 		var jwtToken=jwtService.generateToken(user);
 		return AuthenticationResponse.builder().token(jwtToken).build();

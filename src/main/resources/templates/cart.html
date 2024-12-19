@@ -1,84 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/css/header.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>My Cart</title>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
 </head>
-<body class="bg-gray-50">
-    <div th:replace="~{header :: header}"></div>
+<body class="bg-gray-100">
+    <div class="max-w-4xl mx-auto py-8">
+        <h1 class="text-2xl font-bold mb-4">My Cart</h1>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 class="text-2xl font-bold text-gray-900 mb-8">Your Cart</h1>
-
-        <div th:if="${cartItems.empty}" class="text-center py-8">
-            <p class="text-gray-500">Your cart is empty</p>
-            <a href="/products" class="text-indigo-600 hover:text-indigo-500 mt-4 inline-block">
-                Continue Shopping
-            </a>
+        <div th:if="${#lists.isEmpty(cartItems)}">
+            <p class="text-gray-500">Your cart is empty.</p>
         </div>
 
-        <div th:unless="${cartItems.empty}">
-            <div class="bg-white shadow overflow-hidden rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Product
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Quantity
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Price
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Total
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr th:each="item : ${cartItems}">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                <span th:text="${item.product.name}"></span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <span th:text="${item.quantity}"></span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                $<span th:text="${#numbers.formatDecimal(item.product.price, 0, 2)}"></span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                $<span th:text="${#numbers.formatDecimal(item.quantity * item.product.price, 0, 2)}"></span>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr class="bg-gray-50">
-                            <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">
-                                Total:
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
-                                $<span th:text="${#numbers.formatDecimal(total, 0, 2)}"></span>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+        <div th:if="${not #lists.isEmpty(cartItems)}">
+            <table class="w-full table-auto bg-white shadow-sm rounded-lg">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="px-4 py-2">Product</th>
+                        <th class="px-4 py-2">Price</th>
+                        <th class="px-4 py-2">Quantity</th>
+                        <th class="px-4 py-2">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${cartItems}" class="border-b">
+                        <td class="px-4 py-2" th:text="${item.product.name}"></td>
+                        <td class="px-4 py-2" th:text="'$' + ${item.product.price}"></td>
+                        <td class="px-4 py-2" th:text="${item.quantity}"></td>
+                        <td class="px-4 py-2" th:text="'$' + ${item.quantity * item.product.price}"></td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <div class="mt-6 flex justify-end">
-                <a href="/products" class="text-indigo-600 hover:text-indigo-500 mr-4">
-                    Continue Shopping
-                </a>
-                <a href="/checkout" class="inline-flex justify-center py-2 px-4 border border-transparent 
-                           shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 
-                           hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
-                           focus:ring-indigo-500">
-                    Proceed to Checkout
-                </a>
+            <div class="mt-4 text-right">
+                <p class="text-lg font-semibold">Total: <span th:text="'$' + ${total}"></span></p>
             </div>
         </div>
     </div>

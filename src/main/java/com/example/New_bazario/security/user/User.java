@@ -1,14 +1,11 @@
 package com.example.New_bazario.security.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.example.New_bazario.entities.Cart;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -19,11 +16,10 @@ import java.util.List;
 public class User implements UserDetails {
 
     public User() {
-		super();
-		
-	}
+        super();
+    }
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
@@ -34,8 +30,13 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cartId", referencedColumnName = "cartId")
+    private Cart cart;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
@@ -43,6 +44,7 @@ public class User implements UserDetails {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
     // Constructor
     private User(Builder builder) {
         this.id = builder.id;
@@ -50,6 +52,7 @@ public class User implements UserDetails {
         this.lastname = builder.lastname;
         this.email = builder.email;
         this.password = builder.password;
+        this.cart = builder.cart;
         this.role = builder.role;
         this.phoneNumber = builder.phoneNumber;
         this.activity = builder.activity;
@@ -64,6 +67,7 @@ public class User implements UserDetails {
         private String lastname;
         private String email;
         private String password;
+        private Cart cart; // Added cart
         private Role role;
         private String phoneNumber;
         private Activity activity;
@@ -92,6 +96,11 @@ public class User implements UserDetails {
 
         public Builder password(String password) {
             this.password = password;
+            return this;
+        }
+
+        public Builder cart(Cart cart) { // Setter for cart in builder
+            this.cart = cart;
             return this;
         }
 
@@ -171,6 +180,14 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -218,27 +235,27 @@ public class User implements UserDetails {
         return true;
     }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }

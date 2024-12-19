@@ -20,35 +20,20 @@ public class CartService {
         this.userRepository = userRepository;
     }
 
-    public Cart createCart(Integer userId) {
+    public Cart getOrCreateCart(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
         
-        // Check if user already has a cart
-        Cart existingCart = getCartByUserId(userId);
-        if (existingCart != null) {
-            return existingCart;
+        if (user.getCart() == null) {
+            Cart newCart = new Cart();
+            newCart.setCreatedAt(LocalDateTime.now());
+            newCart.setUpdatedAt(LocalDateTime.now());
+            newCart = cartRepository.save(newCart);
+            user.setCart(newCart);
+            userRepository.save(user);
+            return newCart;
         }
-
-        Cart cart = new Cart(user, LocalDateTime.now(), LocalDateTime.now());
-        return cartRepository.save(cart);
-    }
-
-    public Cart getCartByUserId(Integer userId) {
-        Cart cart = cartRepository.findByUser_Id(userId);
-        if (cart != null) {
-            cart.getCartItems(); // Initialize cart items
-        }
-        return cart;
-    }
-
-    public Cart getCartById(Integer cartId) {
-        return cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Cart not found with ID: " + cartId));
-    }
-
-    public boolean validateCartOwner(Integer cartId, Integer userId) {
-        Cart cart = getCartById(cartId);
-        return cart.getUser().getId().equals(userId);
+        
+        return user.getCart();
     }
 }
