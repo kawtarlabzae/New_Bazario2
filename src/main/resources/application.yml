@@ -16,3 +16,9 @@ spring:
     name: New_bazario
 server:
   port: 8081
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .html
+  main:
+    web-application-type: servlet
