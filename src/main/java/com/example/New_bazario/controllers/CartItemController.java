@@ -1,6 +1,7 @@
 package com.example.New_bazario.controllers;
 
 import com.example.New_bazario.entities.CartItem;
+import com.example.New_bazario.exceptions.UserNotAuthenticatedException;
 import com.example.New_bazario.services.CartItemService;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,7 +33,7 @@ public class CartItemController {
 
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
-            throw new RuntimeException("User not authenticated");
+            throw new UserNotAuthenticatedException("User is not authenticated. Please log in.");
         }
 
         cartItemService.addCartItem(userId, productId, quantity);

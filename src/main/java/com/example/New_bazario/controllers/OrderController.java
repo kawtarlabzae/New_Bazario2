@@ -2,6 +2,7 @@ package com.example.New_bazario.controllers;
 
 import com.example.New_bazario.entities.CartItem;
 import com.example.New_bazario.entities.Order;
+import com.example.New_bazario.exceptions.OrderNotFoundException;
 import com.example.New_bazario.security.user.User;
 import com.example.New_bazario.services.OrderService;
 import com.example.New_bazario.services.UserService;
@@ -98,7 +99,7 @@ public class OrderController {
         User user = userService.getUserById(userId);
         Order order = orderService.getOrderByIdForUser(user, orderId);
         if (order == null) {
-            throw new RuntimeException("Order not found");
+            throw new OrderNotFoundException("Order with ID " + orderId + " not found.");
         }
 
         // Prepare order details for the frontend
