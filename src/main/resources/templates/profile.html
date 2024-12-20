@@ -3,53 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/css/header.css" rel="stylesheet">
+    <title>Profile - E-Shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-50">
-<!-- Include Header -->
-<div th:replace="header :: header"></div>
+    <div th:replace="header :: header"></div>
 
-<div class="max-w-7xl mx-auto p-6">
-    <div class="bg-white rounded-lg shadow-lg p-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">User Profile</h1>
-
-        <!-- Display User Information -->
-        <div class="space-y-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <p class="text-lg font-semibold" th:text="${user.firstname} + ' ' + ${user.lastname}"></p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-3xl mx-auto">
+            <!-- Profile Card -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <!-- Profile Header -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
+                    <div class="flex items-center space-x-4">
+                        <!-- Profile Avatar -->
+                        <div class="flex-shrink-0">
+                            <div class="w-20 h-20 rounded-full bg-white/30 flex items-center justify-center text-3xl">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <!-- Profile Title -->
+                        <div>
+                            <h1 class="text-2xl font-bold">Profile Dashboard</h1>
+                            <p class="text-blue-100" th:text="${user.email}"></p>
+                        </div>
+                    </div>
                 </div>
 
-            </div>
+                <!-- Profile Stats -->
+                <div class="grid grid-cols-3 divide-x divide-gray-200 bg-gray-50">
+                    <div class="p-4 text-center">
+                        <p class="text-sm text-gray-500">Status</p>
+                        <div class="mt-1 flex items-center justify-center">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-1"></span>
+                                Online
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4 text-center">
+                        <p class="text-sm text-gray-500">Account Type</p>
+                        <p class="mt-1 font-medium text-gray-900">Customer</p>
+                    </div>
+                    <div class="p-4 text-center">
+                        <p class="text-sm text-gray-500">Member Since</p>
+                        <p class="mt-1 font-medium text-gray-900">2024</p>
+                    </div>
+                </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <p class="text-lg font-semibold" th:text="${user.email}"></p>
-            </div>
+                <!-- Profile Content -->
+                <div class="p-6 space-y-6">
+                    <!-- Personal Information -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                            <i class="fas fa-user-circle mr-2 text-blue-600"></i>
+                            Personal Information
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Name -->
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <label class="block text-sm font-medium text-gray-500">Full Name</label>
+                                <p class="mt-1 text-lg font-medium text-gray-900" th:text="${user.firstname} + ' ' + ${user.lastname}"></p>
+                            </div>
+                            <!-- Phone -->
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <label class="block text-sm font-medium text-gray-500">Phone Number</label>
+                                <p class="mt-1 text-lg font-medium text-gray-900" th:text="${user.phoneNumber}"></p>
+                            </div>
+                        </div>
+                    </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Phone Number</label>
-                <p class="text-lg font-semibold" th:text="${user.phoneNumber}"></p>
-            </div>
+                    <!-- Activity -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                            <i class="fas fa-chart-line mr-2 text-blue-600"></i>
+                            Account Activity
+                        </h2>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <label class="block text-sm font-medium text-gray-500">Recent Activity</label>
+                            <p class="mt-1 text-lg font-medium text-gray-900" th:text="${user.activity}"></p>
+                        </div>
+                    </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Activity</label>
-                <p class="text-lg font-semibold text-gray-800" th:text="${user.activity}"></p>
-                <div class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-                    Online
+                    <!-- Actions -->
+                    <div class="border-t pt-6 flex justify-between items-center">
+                        <a href="/products" 
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                            <i class="fas fa-shopping-bag mr-2"></i>
+                            Continue Shopping
+                        </a>
+                        <a href="/profile/logout"
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Action Buttons -->
-        <div class="mt-6 flex justify-end space-x-4">
-            <a href="/profile/logout" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Logout</a>
+            <!-- Additional Features Card -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Orders Quick View -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                        <i class="fas fa-shopping-cart mr-2 text-blue-600"></i>
+                        Recent Orders
+                    </h3>
+                    <a href="/orders" class="text-blue-600 hover:text-blue-700 text-sm flex items-center">
+                        View Order History
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Settings Quick Access -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                        <i class="fas fa-cog mr-2 text-blue-600"></i>
+                        Account Settings
+                    </h3>
+                    <a href="#" class="text-blue-600 hover:text-blue-700 text-sm flex items-center">
+                        Manage Preferences
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>

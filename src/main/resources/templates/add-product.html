@@ -3,58 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/css/header.css" rel="stylesheet">
+    <title>Add Product - E-Shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-50">
-<div th:replace="~{header :: header}"></div>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="bg-white rounded-lg shadow-sm p-6">
-        <h1 class="text-2xl font-bold text-gray-900 mb-8">Add New Product</h1>
-        <form th:action="@{/admin/add-product}" method="post" enctype="multipart/form-data" class="space-y-4">
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
-                <input type="text" id="name" name="name" required
-                       class="mt-1 block w-full p-2 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    <div th:replace="~{header :: header}"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h1 class="text-2xl font-bold text-gray-900">Add New Product</h1>
             </div>
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea id="description" name="description" required
-                          class="mt-1 block w-full p-2 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+
+            <!-- Form -->
+            <div class="p-6">
+                <form th:action="@{/admin/add-product}" method="post" enctype="multipart/form-data" class="space-y-6">
+                    <!-- Product Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                        <input type="text" id="name" name="name" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               placeholder="Enter product name">
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea id="description" name="description" rows="4" required
+                                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                  placeholder="Enter product description"></textarea>
+                    </div>
+
+                    <!-- Price and Stock -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700">Price ($)</label>
+                            <div class="mt-1 relative rounded-lg shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">$</span>
+                                </div>
+                                <input type="number" id="price" name="price" step="0.01" required
+                                       class="pl-7 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                       placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="stockQuantity" class="block text-sm font-medium text-gray-700">Stock Quantity</label>
+                            <input type="number" id="stockQuantity" name="stockQuantity" required min="0"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                   placeholder="Enter stock quantity">
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <label for="categoryId" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select id="categoryId" name="categoryId" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="" disabled selected>Select a category</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Image URL -->
+                    <div>
+                        <label for="imageUrl" class="block text-sm font-medium text-gray-700">Image URL</label>
+                        <input type="text" id="imageUrl" name="imageUrl"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               placeholder="Enter image URL">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end space-x-4">
+                        <a href="/products"
+                           class="px-6 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Cancel
+                        </a>
+                        <button type="submit"
+                                class="px-6 py-2 bg-blue-600 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Add Product
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div>
-                <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-                <input type="number" id="price" name="price" step="0.01" required
-                       class="mt-1 block w-full p-2 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            </div>
-            <div>
-                <label for="stockQuantity" class="block text-sm font-medium text-gray-700">Stock Quantity</label>
-                <input type="number" id="stockQuantity" name="stockQuantity" required
-                       class="mt-1 block w-full p-2 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            </div>
-            <div>
-                <label for="categoryId" class="block text-sm font-medium text-gray-700">Category</label>
-                <select id="categoryId" name="categoryId" required
-                        class="mt-1 block w-full p-2 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <option value="" disabled selected>Select a category</option>
-                    <option th:each="category : ${categories}"
-                            th:value="${category.id}"
-                            th:text="${category.name}"></option>
-                </select>
-            </div>
-            <div>
-                <label for="imageUrl" class="block text-sm font-medium text-gray-700">Image URL</label>
-                <input type="text" id="imageUrl" name="imageUrl"
-                       class="mt-1 block w-full p-2 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            </div>
-            <button type="submit"
-                    class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                Add Product
-            </button>
-        </form>
+        </div>
     </div>
-</div>
 </body>
 </html>

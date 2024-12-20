@@ -4,53 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/css/header.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div th:fragment="header">
-        <header>
-            <div class="header-container">
-                <div class="logo-section">
-                    <div class="logo-placeholder"></div>
-                </div>
+    <div th:fragment="header" class="w-full">
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo Section -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="/" class="flex items-center">
+                            <span class="text-2xl font-bold text-primary-600">Bazario</span>
+                        </a>
+                    </div>
 
-                <nav>
-                    <ul>
-                        <li th:if="${session.userRole == 'ADMIN'}">
-                            <a href="/admin/dashboard">
-                                <i class="fas fa-tools"></i>
-                                <span>Admin Dashboard</span>
-                            </a>
-                        </li>
-                        <li><a href="/" class="active">
-                            <i class="fas fa-home"></i>
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="/" class="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center">
+                            <i class="fas fa-home mr-2"></i>
                             <span>Home</span>
-                        </a></li>
-                        <li><a href="/products">
-                            <i class="fas fa-box"></i>
+                        </a>
+                        <a href="/products" class="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center">
+                            <i class="fas fa-box mr-2"></i>
                             <span>Products</span>
-                        </a></li>
-                        <li><a href="/cart">
-                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                        <a href="/cart" class="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center">
+                            <i class="fas fa-shopping-cart mr-2"></i>
                             <span>Cart</span>
-                        </a></li>
-                        <li><a href="/orders">
-                            <i class="fas fa-file-invoice"></i>
-                            <span>Orders</span>
-                        </a></li>
-                    </ul>
-                </nav>
+                        </a>
+                     
+                        <div th:if="${session.userRole == 'ADMIN'}" class="relative">
+                            <a href="/admin/dashboard" class="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center">
+                                <i class="fas fa-tools mr-2"></i>
+                                <span>Admin</span>
+                            </a>
+                        </div>
+                    </nav>
 
-                <div class="profile-section">
-                    <a href="/profile" class="profile-button">
-                        <i class="fas fa-user"></i>
-                    </a>
+                    <!-- Profile Section -->
+                    <div class="flex items-center space-x-4">
+                        <a href="/profile" class="text-secondary-600 hover:text-primary-600 p-2 rounded-full transition-colors duration-200">
+                            <i class="fas fa-user text-xl"></i>
+                        </a>
+                        <!-- Mobile Menu Button -->
+                        <button type="button" class="md:hidden bg-white p-2 rounded-md text-secondary-400 hover:text-secondary-500 hover:bg-secondary-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500">
+                            <span class="sr-only">Open menu</span>
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
                 </div>
+            </div>
 
-
+            <!-- Mobile Menu -->
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="/" class="text-secondary-600 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                    <a href="/products" class="text-secondary-600 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">Products</a>
+                    <a href="/cart" class="text-secondary-600 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">Cart</a>
+                    <a href="/orders" class="text-secondary-600 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">Orders</a>
+                    <a th:if="${session.userRole == 'ADMIN'}" href="/admin/dashboard" class="text-secondary-600 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">Admin Dashboard</a>
+                </div>
             </div>
         </header>
+
+        <!-- Simple JavaScript for mobile menu toggle -->
+        <script>
+            document.querySelector('button').addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenu.classList.toggle('hidden');
+            });
+        </script>
     </div>
 </body>
+</html>

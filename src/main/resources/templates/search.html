@@ -7,9 +7,13 @@
             <div class="flex gap-4">
                 <input type="text"
                        name="searchTerm"
-                       class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                       class="flex-1 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
                        placeholder="Search for products..."
                        th:value="${searchTerm}">
+                <button type="submit" 
+                        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">
+                    <i class="fas fa-search mr-2"></i>Search
+                </button>
             </div>
 
             <!-- Advanced Filters -->
@@ -21,13 +25,13 @@
                         <input type="number"
                                name="minPrice"
                                step="0.01"
-                               class="w-full rounded-md border-gray-300"
+                               class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                placeholder="Min Price"
                                th:value="${minPrice}">
                         <input type="number"
                                name="maxPrice"
                                step="0.01"
-                               class="w-full rounded-md border-gray-300"
+                               class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                placeholder="Max Price"
                                th:value="${maxPrice}">
                     </div>
@@ -38,7 +42,7 @@
                     <label class="block text-sm font-medium text-gray-700">Minimum Stock</label>
                     <input type="number"
                            name="minStock"
-                           class="w-full rounded-md border-gray-300"
+                           class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                            placeholder="Min Stock"
                            th:value="${minStock}">
                 </div>
@@ -47,27 +51,19 @@
             <!-- Category Filters -->
             <div class="mt-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
-                <div class="flex flex-wrap gap-2">
-                    <div th:each="category : ${categories}" class="flex items-center space-x-2">
+                <div class="flex flex-wrap gap-3">
+                    <div th:each="category : ${categories}" class="flex items-center">
                         <input type="checkbox"
                                name="categoryIds"
                                th:value="${category.id}"
                                th:checked="${selectedCategories != null and selectedCategories.contains(category.id)}"
-                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                               class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
                         <label th:for="${'category-' + category.id}"
-                               class="text-sm font-medium text-gray-700"
+                               class="text-sm text-gray-700"
                                th:text="${category.name}">
                         </label>
                     </div>
                 </div>
-            </div>
-
-            <!-- Search Button -->
-            <div class="flex items-end">
-                <button type="submit"
-                        class="w-full bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    Search
-                </button>
             </div>
         </form>
     </div>

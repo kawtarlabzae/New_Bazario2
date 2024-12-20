@@ -41,6 +41,6 @@ public class UserController {
         // Invalidate the session to log out the user
         session.invalidate();
         System.out.println("User session invalidated. Logging out.");
-        return "redirect:/products"; // Redirect to the login page
+        return "redirect:/"; // Redirect to the login page
     }
 }
