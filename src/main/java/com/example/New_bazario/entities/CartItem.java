@@ -19,6 +19,9 @@ public class CartItem {
     @Column(name = "cart_id", nullable = false) // Foreign key to Cart
     private Integer cartId; // Store the cart ID instead of a direct relationship
 
+    @Column(name = "order_id", nullable = true) // Foreign key to Cart
+    private Integer orderId; 
+    
     // Constructors
     public CartItem() {}
 

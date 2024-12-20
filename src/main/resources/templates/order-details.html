@@ -7,61 +7,106 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="/css/header.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function removeItem(button) {
+            // Get the row and price data
+            const row = button.closest('tr');
+            const priceStr = row.getAttribute('data-total-price');
+            const price = parseFloat(priceStr);
+
+            // Hide the row (using opacity for smooth transition)
+            row.style.opacity = '0';
+            setTimeout(() => {
+                row.style.display = 'none';
+            }, 300); // Match this with CSS transition time
+
+            // Update the total amount
+            const totalElement = document.getElementById('totalAmount');
+            const currentTotal = parseFloat(totalElement.innerText);
+            const newTotal = (currentTotal - price).toFixed(2);
+            
+            // Animate total update
+            totalElement.style.opacity = '0';
+            setTimeout(() => {
+                totalElement.innerText = newTotal;
+                totalElement.style.opacity = '1';
+            }, 150);
+        }
+    </script>
+    <style>
+        tr {
+            transition: opacity 0.3s ease-out;
+        }
+        #totalAmount {
+            transition: opacity 0.15s ease-out;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
-<!-- Include Header -->
-<div th:replace="~{header :: header}"></div>
+    <!-- Include Header -->
+    <div th:replace="~{header :: header}"></div>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-2xl font-bold mb-4">Order Details</h1>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-2xl font-bold mb-4">Order Details</h1>
 
-    <!-- Order Items Table -->
-    <table class="min-w-full table-auto border-collapse border border-gray-200">
-        <thead>
-            <tr>
-                <th class="px-4 py-2 border border-gray-300">Item Name</th>
-                <th class="px-4 py-2 border border-gray-300">Description</th>
-                <th class="px-4 py-2 border border-gray-300">Quantity</th>
-                <th class="px-4 py-2 border border-gray-300">Price per Unit</th>
-                <th class="px-4 py-2 border border-gray-300">Total Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="item : ${cartItems}" class="hover:bg-gray-50">
-                <td class="px-4 py-2 border border-gray-300" th:text="${item.product.name}"></td>
-                <td class="px-4 py-2 border border-gray-300" th:text="${item.product.description}"></td>
-                <td class="px-4 py-2 border border-gray-300" th:text="${item.quantity}"></td>
-                <td class="px-4 py-2 border border-gray-300" th:text="${item.product.price}"></td>
-                <td class="px-4 py-2 border border-gray-300" 
-                    th:text="${item.product.price * item.quantity}"></td>
-            </tr>
-        </tbody>
-    </table>
+        <!-- Order Items Table -->
+        <table class="min-w-full table-auto border-collapse border border-gray-200">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2 border border-gray-300">Item Name</th>
+                    <th class="px-4 py-2 border border-gray-300">Description</th>
+                    <th class="px-4 py-2 border border-gray-300">Quantity</th>
+                    <th class="px-4 py-2 border border-gray-300">Price per Unit</th>
+                    <th class="px-4 py-2 border border-gray-300">Total Price</th>
+                    <th class="px-4 py-2 border border-gray-300 text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${cartItems}" 
+                    th:if="${item != null}" 
+                    class="hover:bg-gray-50"
+                    th:data-total-price="${item.product.price * item.quantity}">
+                    <td class="px-4 py-2 border border-gray-300" th:text="${item.product.name}"></td>
+                    <td class="px-4 py-2 border border-gray-300" th:text="${item.product.description}"></td>
+                    <td class="px-4 py-2 border border-gray-300" th:text="${item.quantity}"></td>
+                    <td class="px-4 py-2 border border-gray-300" th:text="${item.product.price}"></td>
+                    <td class="px-4 py-2 border border-gray-300" th:text="${item.product.price * item.quantity}"></td>
+                    <td class="px-4 py-2 border border-gray-300 text-center">
+                        <button 
+                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
+                            onclick="removeItem(this)">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <!-- Total Amount -->
-    <div class="mt-4">
-        <p class="text-lg font-bold">Total Amount: <span th:text="${totalAmount}"></span></p>
+        <!-- Total Amount -->
+        <div class="mt-4">
+            <p class="text-lg font-bold">Total Amount: $<span id="totalAmount" th:text="${totalAmount}"></span></p>
+        </div>
+
+        <!-- Buttons Section -->
+        <div class="mt-6 flex justify-end space-x-4">
+            <!-- Go to Payment Button -->
+            <form th:action="@{/orders/payment}" method="post">
+                <input type="hidden" name="orderId" th:value="${order.orderId}">
+                <button type="submit" 
+                        class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors">
+                    Go to Payment
+                </button>
+            </form>
+            
+            <!-- Drop Order Button -->
+            <form th:action="@{/orders/drop}" method="post">
+                <input type="hidden" name="orderId" th:value="${order.orderId}">
+                <button type="submit" 
+                        class="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition-colors">
+                    Drop Order
+                </button>
+            </form>
+        </div>
     </div>
-
-    <!-- Buttons Section -->
-    <div class="mt-6 flex justify-end space-x-4">
-        <!-- Go to Payment Button -->
-        <form th:action="@{/orders/payment}" method="post">
-            <button type="submit" 
-                    class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
-                Go to Payment
-            </button>
-        </form>
-        
-        <!-- Drop Order Button -->
-        <form th:action="@{/orders/drop}" method="post">
-            <input type="hidden" name="orderId" th:value="${order.orderId}">
-            <button type="submit" 
-                    class="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600">
-                Drop Order
-            </button>
-        </form>
-    </div>
-</div>
 </body>
 </html>
