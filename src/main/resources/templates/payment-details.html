@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link href="/css/header.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Include Header -->
+    <div th:replace="~{header :: header}"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-2xl font-bold mb-4">Payment Details</h1>
+
+        <!-- Order Summary -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+            <table class="min-w-full table-auto border-collapse border border-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2 border border-gray-300">Item Name</th>
+                        <th class="px-4 py-2 border border-gray-300">Quantity</th>
+                        <th class="px-4 py-2 border border-gray-300">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${order.orderItems}" th:if="${item != null}">
+                        <td class="px-4 py-2 border border-gray-300" th:text="${item.product.name}"></td>
+                        <td class="px-4 py-2 border border-gray-300" th:text="${item.quantity}"></td>
+                        <td class="px-4 py-2 border border-gray-300" th:text="${item.product.price}"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="mt-4 text-lg font-bold">
+                Total Amount: $<span th:text="${totalAmount}"></span>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <form action="/orders/payment-success" method="get" class="mt-6">
+ 
+            <button type="submit"
+                    class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                Proceed to Payment
+            </button>
+        </form>
+    </div>
+</body>
+</html>

@@ -92,19 +92,36 @@ public class OrderService {
         return new ArrayList<>(order.getOrderItems());
     }
     
-    public Order removeItemFromOrder(Integer orderId, Integer cartItemId, Integer userId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-
-
-        CartItem itemToRemove = order.getOrderItems().stream()
-                .filter(item -> item.getCartItemId().equals(cartItemId))
+    public boolean removeCartItemFromOrder(Integer orderId, Integer cartItemId, User user) {
+        // Check if the user has the specified order
+        Order order = user.getOrders().stream()
+                .filter(o -> o.getOrderId().equals(orderId))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Item not found in the order"));
+                .orElseThrow(() -> new RuntimeException("Order not found for the given user"));
 
-        order.getOrderItems().remove(itemToRemove);
-        return orderRepository.save(order);
+        // Find the CartItem to be removed
+        boolean removed = false;
+        Set<CartItem> cartItems = order.getOrderItems();
+
+        for (CartItem cartItem : cartItems) {
+            if (cartItem != null && cartItem.getCartId().equals(cartItemId)) {
+                cartItem = null; // Replace with null
+                removed = true;
+                break;
+            }
+        }
+
+        if (removed) {
+            // Persist changes to the database
+            order.setOrderItems(cartItems);
+            orderRepository.save(order);
+        }
+
+        return removed;
     }
+
+
+
   
 
 

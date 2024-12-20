@@ -101,14 +101,22 @@ public class OrderController {
             throw new RuntimeException("Order not found");
         }
 
-        // Add order details to the model for the payment page
+        // Prepare order details for the frontend
         model.addAttribute("order", order);
         model.addAttribute("totalAmount", order.getOrderItems().stream()
+                .filter(item -> item != null && item.getProduct() != null)
                 .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
 
-        return "payment"; 
+        return "payment-details"; // Redirect to a payment details page
     }
+    
+
+    @GetMapping("/payment-success")
+    public String paymentSuccess() {
+        return "payment-success"; // Thymeleaf template to show payment success message
+    }
+
     
     @PostMapping("/drop")
     public String dropOrder(
@@ -123,6 +131,27 @@ public class OrderController {
     
         return "redirect:/cart";
     }
+    @PostMapping("/{orderId}/items/{cartItemId}")
+    public String removeCartItemFromOrder(
+            @PathVariable Integer orderId,
+            @PathVariable Integer cartItemId,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        
+
+        User user = userService.getUserById(userId);
+        boolean removed = orderService.removeCartItemFromOrder(orderId, cartItemId, user);
+
+        if (removed) {
+            redirectAttributes.addFlashAttribute("successMessage", "Item removed successfully.");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to remove item.");
+        }
+
+        return "redirect:/orders/view/" + orderId; // Redirect back to the order details page
+    }
+
 
 
 }
