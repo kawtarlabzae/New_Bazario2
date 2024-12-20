@@ -29,7 +29,7 @@ public class OrderService {
     }
     @Transactional
     public Order createOrderFromCart(User user) {
-        Set<CartItem> cartItems = user.getCart().getCartItems();
+    	Set<CartItem> cartItems = new HashSet<>(user.getCart().getCartItems());
         
         if (cartItems.isEmpty()) {
             throw new RuntimeException("Cart is empty. Cannot create an order.");
@@ -105,5 +105,7 @@ public class OrderService {
         order.getOrderItems().remove(itemToRemove);
         return orderRepository.save(order);
     }
+  
+
 
 }
