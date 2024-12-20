@@ -2,6 +2,8 @@ package com.example.New_bazario.controllers;
 
 import com.example.New_bazario.entities.Product;
 import com.example.New_bazario.services.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,11 +40,6 @@ public class ProductController {
         return productService.updateProduct(productId, updatedProduct);
     }
 
-    @DeleteMapping("/{productId}")
-    public String deleteProduct(@PathVariable Integer productId) {
-        productService.deleteProduct(productId);
-        return "Product with ID " + productId + " deleted successfully.";
-    }
     @GetMapping
     public List<Product> getFilteredProducts(
             @RequestParam(required = false) List<Integer> categoryIds,

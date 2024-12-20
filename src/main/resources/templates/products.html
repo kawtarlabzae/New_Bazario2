@@ -9,85 +9,111 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <!-- Include the header -->
-    <div th:replace="~{header :: header}"></div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-            <div th:replace="~{search :: search}"></div>
+<!-- Include the header -->
+<div th:replace="~{header :: header}"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <div th:replace="~{search :: search}"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-8">Products</h1>
+
+        <!-- No results message -->
+        <div th:if="${#lists.isEmpty(products)}" class="text-gray-500 text-center py-8">
+            No products found.
         </div>
 
-        <!-- Main Content -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-            <h1 class="text-2xl font-bold text-gray-900 mb-8">Products</h1>
+        <!-- Add Product Button (Visible to Admins Only) -->
+        <div th:if="${userRole != null and userRole.name() == 'ADMIN'}" class="mb-6">
+            <a href="/admin/add-product"
+               class="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                Add Product
+            </a>
+        </div>
 
-            <!-- No results message -->
-            <div th:if="${#lists.isEmpty(products)}" class="text-gray-500 text-center py-8">
-                No products found.
-            </div>
 
-            <!-- Product Grid -->
-            <div th:if="${not #lists.isEmpty(products)}" 
-                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Loop through products -->
-                <div th:each="product : ${products}" 
-                     class="bg-white border rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
-                    <!-- Product Image -->
-                    <div class="w-full h-48 overflow-hidden">
-                        <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
-                             th:src="${product.imageUrl}"
-                             alt="Product Image"
-                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
-                        <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
-                             src="/default-product-image.jpg"
-                             alt="Default Image"
-                             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
-                    </div>
+        <!-- Product Grid -->
+        <div th:if="${not #lists.isEmpty(products)}"
+             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Loop through products -->
+            <div th:each="product : ${products}"
+                 class="bg-white border rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <!-- Product Image -->
+                <div class="w-full h-48 overflow-hidden">
+                    <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
+                         th:src="${product.imageUrl}"
+                         alt="Product Image"
+                         class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                    <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
+                         src="/default-product-image.jpg"
+                         alt="Default Image"
+                         class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                </div>
 
-                    <!-- Product Info -->
-                    <div class="p-5">
-                        <!-- Product Name -->
-                        <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600 transition-colors duration-200" 
-                            th:text="${product.name}"></h3>
+                <!-- Product Info -->
+                <div class="p-5">
+                    <!-- Product Name -->
+                    <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600 transition-colors duration-200"
+                        th:text="${product.name}"></h3>
 
-                        <!-- Product Description -->
-                        <p class="text-sm text-gray-600 mt-2" th:text="${product.description}"></p>
+                    <!-- Product Description -->
+                    <p class="text-sm text-gray-600 mt-2" th:text="${product.description}"></p>
 
-                        <!-- Price -->
-                        <p class="text-lg font-bold text-indigo-600 mt-3" th:text="'$' + ${product.price}"></p>
+                    <!-- Price -->
+                    <p class="text-lg font-bold text-indigo-600 mt-3" th:text="'$' + ${product.price}"></p>
 
-                        <!-- Stock -->
-                        <p class="text-sm mt-2">
-    <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}"
-          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-          th:text="'In Stock: ' + ${product.stockQuantity}"></span>
-                            <span th:unless="${product.stockQuantity != null and product.stockQuantity > 0}"
-                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-          Out of Stock
-    </span>
-                        </p>
+                    <!-- Stock -->
+                    <p class="text-sm mt-2">
+                            <span th:if="${product.stockQuantity != null and product.stockQuantity > 0}"
+                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                                  th:text="'In Stock: ' + ${product.stockQuantity}"></span>
+                        <span th:unless="${product.stockQuantity != null and product.stockQuantity > 0}"
+                              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                Out of Stock
+                            </span>
+                    </p>
 
+                    <!-- Admin Actions -->
+                    <div th:if="${userRole != null and userRole.name() == 'ADMIN'}" class="mt-4">
                         <!-- Edit Stock -->
-                        <form th:if="${userRole.name() == 'ADMIN'}" th:action="@{/admin/update-stock}" method="post" class="mt-4">
+                        <form th:action="@{/admin/update-stock}" method="post" class="inline">
                             <input type="hidden" name="productId" th:value="${product.productId}">
-                            <div class="flex items-center">
-                                <input type="number" name="stockQuantity" th:value="${product.stockQuantity}" min="0" class="w-20 p-2 border rounded">
-                                <button type="submit" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                    Update Stock
-                                </button>
-                            </div>
+                            <input type="number" name="stockQuantity" th:value="${product.stockQuantity}"
+                                   min="0" class="w-20 p-2 border rounded">
+                            <button type="submit" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                Update Stock
+                            </button>
                         </form>
-
-
-
-                        <!-- Details Button -->
-                        <a th:href="@{/products/{id}(id=${product.productId})}"
-                           class="mt-4 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            View Details
-                        </a>
+                        <!-- Update Price -->
+                        <form th:action="@{/admin/update-price}" method="post" class="inline">
+                            <input type="hidden" name="productId" th:value="${product.productId}">
+                            <input type="number" name="price" th:value="${product.price}"
+                                   step="0.01" class="w-20 p-2 border rounded">
+                            <button type="submit" class="ml-2 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                                Update Price
+                            </button>
+                        </form>
+                        <!-- Delete Product -->
+                        <form th:action="@{/admin/delete-product}" method="post" class="inline">
+                            <input type="hidden" name="productId" th:value="${product.productId}">
+                            <button type="submit" class="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                                Delete Product
+                            </button>
+                        </form>
                     </div>
+
+
+                    <!-- Details Button -->
+                    <a th:href="@{/products/{id}(id=${product.productId})}"
+                       class="mt-4 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        View Details
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

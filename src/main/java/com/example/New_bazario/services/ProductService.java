@@ -2,8 +2,11 @@ package com.example.New_bazario.services;
 
 import com.example.New_bazario.entities.Product;
 import com.example.New_bazario.entities.ProductFactory;
+import com.example.New_bazario.repositories.CartItemRepository;
 import com.example.New_bazario.repositories.ProductRepository;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,16 +17,12 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
     }
-
-    public Product addProduct(String name, String description, BigDecimal price, Integer stockQuantity, Integer categoryId, String imageUrl) {
-        Product product = ProductFactory.createProduct(name, description, price, stockQuantity, categoryId, imageUrl);
-        return productRepository.save(product);
-    }
-
 
     public Product getProductById(Integer id) {
         return productRepository.findById(id)
@@ -79,7 +78,34 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
         product.setStockQuantity(stockQuantity);
         productRepository.save(product);
-
-
     }
+    @Transactional
+    public void deleteProductAndCartItems(Integer productId) {
+        cartItemRepository.deleteCartItemsByProductId(productId);
+
+        if (!productRepository.existsById(productId)) {
+            throw new RuntimeException("Product not found with ID: " + productId);
+        }
+        productRepository.deleteById(productId);
+    }
+
+    public Product addProduct(String name, String description, BigDecimal price, Integer stockQuantity, Integer categoryId, String imageUrl) {
+        Product product = new Product();
+        product.setName(name);
+        product.setDescription(description);
+        product.setPrice(price);
+        product.setStockQuantity(stockQuantity);
+        product.setCategoryId(categoryId);
+        product.setImageUrl(imageUrl);
+        product.setCreatedAt(LocalDateTime.now());
+        product.setUpdatedAt(LocalDateTime.now());
+        return productRepository.save(product);
+    }
+    public void updatePrice(Integer productId, BigDecimal price) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
+        product.setPrice(price);
+        productRepository.save(product);
+    }
+
 }
