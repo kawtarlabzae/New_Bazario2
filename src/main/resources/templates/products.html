@@ -76,7 +76,7 @@
                     </p>
 
                     <!-- Admin Actions -->
-                    <div th:if="${userRole != null and userRole.name() == 'ADMIN'}" class="mt-4">
+                    <div th:if="${userRole.name() == 'ADMIN'}" class="mt-4">
                         <!-- Edit Stock -->
                         <form th:action="@{/admin/update-stock}" method="post" class="inline">
                             <input type="hidden" name="productId" th:value="${product.productId}">
@@ -103,7 +103,6 @@
                             </button>
                         </form>
                     </div>
-
 
                     <!-- Details Button -->
                     <a th:href="@{/products/{id}(id=${product.productId})}"
