@@ -64,17 +64,7 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("/dashboard")
-    public String showDashboard(HttpSession session, Model model) {
-        // Check if user is logged in
-        if (session.getAttribute("userId") == null) {
-            return "redirect:/api/v1/auth/authenticate";
-        }
-        
-        // Add user information to model
-        model.addAttribute("userName", session.getAttribute("userName"));
-        return "dashboard";
-    }
+    
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {
